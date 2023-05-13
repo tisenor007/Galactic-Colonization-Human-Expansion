@@ -43,15 +43,16 @@ public static class Chunk
             chunkCoordinates.z);
     }
 
-    public static BlockType GetBlockFromChunkCoordinates(ChunkData chunkdata, int x, int y, int z)
+    public static BlockType GetBlockFromChunkCoordinates(ChunkData chunkData, int x, int y, int z)
     {
-        if (InRange(chunkdata, x) && InRangeHeight(chunkdata, y) && InRange(chunkdata, z))
+        if (InRange(chunkData, x) && InRangeHeight(chunkData, y) && InRange(chunkData, z))
         {
-            int index = GetIndexFromPosition(chunkdata, x, y, z);
-            return chunkdata.blocks[index];
+            int index = GetIndexFromPosition(chunkData, x, y, z);
+            return chunkData.blocks[index];
         }
 
-        throw new Exception("Need to ask world for appropriate chunk");
+        return chunkData.worldReference.GetBlockFromChunkCoordinates(chunkData, chunkData.worldPosition.x + x,
+            chunkData.worldPosition.y + y, chunkData.worldPosition.z + z);
     }
 
     public static void SetBlock (ChunkData chunkData, Vector3Int localPosition, BlockType block)
@@ -73,7 +74,7 @@ public static class Chunk
         return x + chunkData.chunkSize * y + chunkData.chunkSize + chunkData.chunkHeight * z;
     }
 
-    public static Vector3Int GetBlockChunkCoordinates(ChunkData chunkData, Vector3Int pos)
+    public static Vector3Int GetBlockInChunkCoordinates(ChunkData chunkData, Vector3Int pos)
     {
         return new Vector3Int
         {
@@ -87,8 +88,20 @@ public static class Chunk
     {
         MeshData meshData = new MeshData(true);
 
-        //fill later
+        LoopThroughTheBlocks(chunkData, (x, y, z) => meshData = BlockHelper.GetMeshData(chunkData, x, y, z,
+            meshData, chunkData.blocks[GetIndexFromPosition(chunkData, x, y, z)]));
 
         return meshData;
+    }
+
+    internal static Vector3Int ChunkPositionFromBlockCoordinates(WorldGenerator worldGenerator, int x, int y, int z)
+    {
+        Vector3Int pos = new Vector3Int
+        {
+            x = Mathf.FloorToInt(x / (float)worldGenerator.chunkSize) * worldGenerator.chunkSize,
+            y = Mathf.FloorToInt(y / (float)worldGenerator.chunkHeight) * worldGenerator.chunkHeight,
+            z = Mathf.FloorToInt(z / (float)worldGenerator.chunkSize) * worldGenerator.chunkSize
+        };
+        return pos;
     }
 }
