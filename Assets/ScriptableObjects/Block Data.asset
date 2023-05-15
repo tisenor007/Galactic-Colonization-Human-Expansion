@@ -12,16 +12,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d5d34e5cffbd545a68180fe6cf7e5d, type: 3}
   m_Name: Block Data
   m_EditorClassIdentifier: 
-  textureSizeX: 0
+  textureSizeX: 0.1
   textureSizeY: 0
   textureDataList:
-  - blockType: 7
+  - blockType: 2
+    up: {x: 0, y: 0}
+    down: {x: 0, y: 0}
+    side: {x: 0, y: 0}
+    isSolid: 1
+    generatesCollider: 0
+  - blockType: 0
     up: {x: 0, y: 0}
     down: {x: 0, y: 0}
     side: {x: 0, y: 0}
     isSolid: 0
     generatesCollider: 0
-  - blockType: 0
+  - blockType: 5
+    up: {x: 0, y: 0}
+    down: {x: 0, y: 0}
+    side: {x: 0, y: 0}
+    isSolid: 0
+    generatesCollider: 0
+  - blockType: 1
+    up: {x: 0, y: 0}
+    down: {x: 0, y: 0}
+    side: {x: 0, y: 0}
+    isSolid: 1
+    generatesCollider: 0
+  - blockType: 8
+    up: {x: 0, y: 0}
+    down: {x: 0, y: 0}
+    side: {x: 0, y: 0}
+    isSolid: 0
+    generatesCollider: 0
+  - blockType: 3
     up: {x: 0, y: 0}
     down: {x: 0, y: 0}
     side: {x: 0, y: 0}

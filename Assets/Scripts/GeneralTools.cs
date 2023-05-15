@@ -3,6 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+public class GeneralTools : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+
+public enum Direction
+{
+    FORWARD, // z+ direction
+    RIGHT, // +x direction
+    BACKWARDS, // -z direction
+    LEFT, // -x direction
+    UP, // +y direction
+    DOWN // -y direction
+
+}
+
 public static class DirectionExtensions
 {
     public static Vector3Int GetVector(this Direction direction)

@@ -25,14 +25,6 @@ public class CharacterController : MonoBehaviour
         DEAD
     }
 
-    protected enum Direction
-    {
-        FORWARD,
-        BACKWARD,
-        LEFT,
-        RIGHT
-    }
-
     //stats..
     public CharBehavior behavior;
     public float walkSpeed;
