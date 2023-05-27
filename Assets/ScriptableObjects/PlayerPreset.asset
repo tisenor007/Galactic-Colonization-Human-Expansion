@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PlayerPreset
   m_EditorClassIdentifier: 
   presetBehavior: 0
-  presetWalkSpeed: 5
-  presetSprintSpeed: 10
+  presetWalkSpeed: 4
+  presetSprintSpeed: 7
   presetJumpHeight: 6
   presetCharName: Guy
   presetNickName: Sgt. Guy

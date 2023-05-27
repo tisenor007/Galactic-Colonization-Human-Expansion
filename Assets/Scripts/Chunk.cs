@@ -16,7 +16,7 @@ public class Chunk
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
 
-    byte[,,] voxelMap = new byte[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
+    public byte[,,] voxelMap = new byte[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
 
     World world;
 

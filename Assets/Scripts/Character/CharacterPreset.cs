@@ -13,4 +13,6 @@ public class CharacterPreset : ScriptableObject
     public string presetNickName;
     public string presetAge;
     public int presetHealth;
+    public float presetCharacterWidth;
+    public float presetCharacterHeight;
 }
