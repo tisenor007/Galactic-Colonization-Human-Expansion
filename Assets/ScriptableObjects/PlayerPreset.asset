@@ -20,3 +20,5 @@ MonoBehaviour:
   presetNickName: Sgt. Guy
   presetAge: 20
   presetHealth: 100
+  presetCharacterWidth: 0.15
+  presetCharacterHeight: 2

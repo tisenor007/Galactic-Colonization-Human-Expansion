@@ -72,6 +72,7 @@ public class CharacterController : MonoBehaviour
     private KeyCode sprintInput = KeyCode.LeftShift;
     private KeyCode jumpInput = KeyCode.Space;
     private KeyCode toggleFPInput = KeyCode.F5;
+    private KeyCode toggleDebugScreenInput = KeyCode.F3;
 
     private Vector3 charMoveDirection;
     private float mouseYRotation = 0.0f;
@@ -85,7 +86,7 @@ public class CharacterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        worldReference = GameObject.Find("World").GetComponent<World>();
+        worldReference = GameManager.currentWorld;
         desiredCamPosition = playerCamTarget.transform.GetChild(0);
         playerHead = charModel.transform.GetChild(0).gameObject;
         SetPresetStats();
@@ -178,7 +179,8 @@ public class CharacterController : MonoBehaviour
         if (!Input.GetKey(sprintInput) && PlayerIsMoving() && isGrounded) { currMoveState = MoveState.WALKING; }
         if (Input.GetKey(sprintInput) && PlayerIsMoving() && isGrounded) { currMoveState = MoveState.SPRINTING; }
         if (Input.GetKeyDown(toggleFPInput)) { CycleThroughCamAngle(); }
-        
+        if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.uiManagerRef.ToggleDebugScreen(); }
+
     }
 
     private void UpdatePlayerCam()
@@ -257,10 +259,10 @@ public class CharacterController : MonoBehaviour
     private float checkDownSpeed(float downSpeed)
     {
         if (
-            worldReference.CheckForVoxel(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth) ||
-            worldReference.CheckForVoxel(transform.position.x + characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth) ||
-            worldReference.CheckForVoxel(transform.position.x + characterWidth, transform.position.y + downSpeed, transform.position.z + characterWidth) ||
-            worldReference.CheckForVoxel(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z + characterWidth)
+            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth)) ||
+            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth)) ||
+            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + downSpeed, transform.position.z + characterWidth)) ||
+            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z + characterWidth))
             )
         {
             isGrounded = true;
@@ -275,10 +277,10 @@ public class CharacterController : MonoBehaviour
     private float checkUpSpeed(float upSpeed)
     {
         if (
-            worldReference.CheckForVoxel(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth) ||
-            worldReference.CheckForVoxel(transform.position.x + characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth) ||
-            worldReference.CheckForVoxel(transform.position.x + characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z + characterWidth) ||
-            worldReference.CheckForVoxel(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z + characterWidth)
+            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth)) ||
+            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth)) ||
+            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z + characterWidth)) ||
+            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z + characterWidth))
             )
         {return 0;}
         else
@@ -290,8 +292,8 @@ public class CharacterController : MonoBehaviour
         get
         {
             if (
-                worldReference.CheckForVoxel(transform.position.x, transform.position.y, transform.position.z + characterWidth) ||
-                worldReference.CheckForVoxel(transform.position.x, transform.position.y + 1f, transform.position.z + characterWidth)
+                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + characterWidth)) ||
+                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + characterWidth))
                 )
             { return true; }
             else
@@ -303,8 +305,8 @@ public class CharacterController : MonoBehaviour
         get
         {
             if (
-                worldReference.CheckForVoxel(transform.position.x, transform.position.y, transform.position.z - characterWidth) ||
-                worldReference.CheckForVoxel(transform.position.x, transform.position.y + 1f, transform.position.z - characterWidth)
+                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - characterWidth)) ||
+                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - characterWidth))
                 )
             { return true; }
             else
@@ -316,8 +318,8 @@ public class CharacterController : MonoBehaviour
         get
         {
             if (
-                worldReference.CheckForVoxel(transform.position.x - characterWidth, transform.position.y, transform.position.z) ||
-                worldReference.CheckForVoxel(transform.position.x - characterWidth, transform.position.y + 1f, transform.position.z)
+                worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y, transform.position.z)) ||
+                worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + 1f, transform.position.z))
                 )
             { return true; }
             else
@@ -329,8 +331,8 @@ public class CharacterController : MonoBehaviour
         get
         {
             if (
-                worldReference.CheckForVoxel(transform.position.x + characterWidth, transform.position.y, transform.position.z) ||
-                worldReference.CheckForVoxel(transform.position.x + characterWidth, transform.position.y + 1f, transform.position.z)
+                worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y, transform.position.z)) ||
+                worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + 1f, transform.position.z))
                 )
             { return true; }
             else
