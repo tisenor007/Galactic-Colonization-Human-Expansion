@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
@@ -62,6 +63,15 @@ public class CharacterController : MonoBehaviour
     public GameObject playerCamTarget;
     public GameObject charModel;
     public GameObject playerCam;
+
+    public Transform highlightBlock;
+    public Transform placeBlock;
+
+    public float checkIncrement = 0.1f;
+    public float reach = 8f;
+
+    public byte selectedBlockIndex = 1;
+
     protected float mouseSensitivity = 4.0f;
     protected CameraAngle currentCamAngle;
 
@@ -73,6 +83,9 @@ public class CharacterController : MonoBehaviour
     private KeyCode jumpInput = KeyCode.Space;
     private KeyCode toggleFPInput = KeyCode.F5;
     private KeyCode toggleDebugScreenInput = KeyCode.F3;
+    private int attackInput = 0;
+    private int blockInput = 1;
+
 
     private Vector3 charMoveDirection;
     private float mouseYRotation = 0.0f;
@@ -92,20 +105,30 @@ public class CharacterController : MonoBehaviour
         SetPresetStats();
         currMoveState = MoveState.IDLE;
         currentCamAngle = CameraAngle.FIRST_PERSON;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void FixedUpdate()
     {
         if (jumpRequest) { Jump(); }
-        CalculateVelocity();
-        transform.Translate(velocity, Space.World);
+        switch (behavior)
+        {
+            case CharBehavior.PLAYER:
+                CalculateVelocity();
+                transform.Translate(velocity, Space.World);
+                break;
+            case CharBehavior.HOSTILE:
+                break;
+            case CharBehavior.NEUTRAL:
+                break;
+            case CharBehavior.FRIENDLY:
+                break;
+        };
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerCam.SetActive(true);
-        UpdatePlayerCam();
         charModel.transform.localRotation = Quaternion.Euler(0, mouseXRotation, 0);
 
         switch (behavior)
@@ -124,6 +147,9 @@ public class CharacterController : MonoBehaviour
 
     protected void RunPlayerBehavior()
     {
+        playerCam.SetActive(true);
+        UpdatePlayerCam();
+        PlaceCursorBlocks();
         switch (currMoveState)
         {
             case MoveState.IDLE:
@@ -181,25 +207,63 @@ public class CharacterController : MonoBehaviour
         if (Input.GetKeyDown(toggleFPInput)) { CycleThroughCamAngle(); }
         if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.uiManagerRef.ToggleDebugScreen(); }
 
+        if (highlightBlock.gameObject.activeSelf)
+        {
+            if (Input.GetMouseButtonDown(attackInput)) 
+            { worldReference.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0); }
+
+            if (Input.GetMouseButtonDown(blockInput))
+            { worldReference.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlockIndex); }
+        }
+    }
+
+    private void PlaceCursorBlocks()
+    {
+        float step = checkIncrement;
+        Vector3 lastPos = new Vector3();
+
+        while (step < reach)
+        {
+            Vector3 pos = playerCamTarget.transform.position + (playerCam.transform.forward * step);
+
+            if (worldReference.CheckForVoxel(pos))
+            {
+                highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                placeBlock.position = lastPos;
+
+                highlightBlock.gameObject.SetActive(true);
+                placeBlock.gameObject.SetActive(true);
+
+                return;
+            }
+
+            lastPos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+
+            step += checkIncrement;
+        }
+
+        highlightBlock.gameObject.SetActive(false);
+        placeBlock.gameObject.SetActive(false);
     }
 
     private void UpdatePlayerCam()
     {
         mouseYRotation += Input.GetAxis("Mouse Y") * mouseSensitivity;
         mouseXRotation += Input.GetAxis("Mouse X") * mouseSensitivity;
-        mouseYRotation = Mathf.Clamp(mouseYRotation, -45, 90);
         playerCamTarget.transform.localRotation = Quaternion.Euler(-mouseYRotation, mouseXRotation, 0);
         playerCamTarget.transform.position = new Vector3(charModel.transform.position.x, charModel.transform.position.y + .48f, charModel.transform.position.z);
 
         switch (currentCamAngle)
         {
             case CameraAngle.FIRST_PERSON:
+                mouseYRotation = Mathf.Clamp(mouseYRotation, -90, 90);
                 playerCam.transform.position = playerCamTarget.transform.position;
                 playerCam.transform.rotation = Quaternion.Euler(playerCamTarget.transform.eulerAngles.x,
                 playerCamTarget.transform.eulerAngles.y, playerCamTarget.transform.eulerAngles.z);
                 if (playerHead.activeSelf) { playerHead.SetActive(false); }
                 break;
             case CameraAngle.THIRD_PERSON_MEDIUM:
+                mouseYRotation = Mathf.Clamp(mouseYRotation, -45, 90);
                 playerCam.transform.position = desiredCamPosition.transform.position;
                 playerCam.transform.rotation = Quaternion.Euler(desiredCamPosition.transform.eulerAngles.x + 55,
                 desiredCamPosition.eulerAngles.y, desiredCamPosition.transform.eulerAngles.z);
@@ -250,13 +314,13 @@ public class CharacterController : MonoBehaviour
         { velocity.x = 0; }
 
         if (velocity.y < 0)
-        { velocity.y = checkDownSpeed(velocity.y); }
+        { velocity.y = CheckDownSpeed(velocity.y); }
         else if (velocity.y > 0)
-        { velocity.y = checkUpSpeed(velocity.y); }
+        { velocity.y = CheckUpSpeed(velocity.y); }
     }
 
     #region Collision
-    private float checkDownSpeed(float downSpeed)
+    private float CheckDownSpeed(float downSpeed)
     {
         if (
             worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth)) ||
@@ -274,7 +338,7 @@ public class CharacterController : MonoBehaviour
             return downSpeed;
         }
     }
-    private float checkUpSpeed(float upSpeed)
+    private float CheckUpSpeed(float upSpeed)
     {
         if (
             worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth)) ||

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Helped with world Gen: https://www.youtube.com/playlist?list=PLVsTSlfj0qsWEJ-5eMtXsYp03Y9yF1dEn
+
 [CreateAssetMenu(fileName = "BiomeAttributes", menuName = "WorldGeneration/Biome Attribute")]
 public class BiomeAttributes : ScriptableObject
 {

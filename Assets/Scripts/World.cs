@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Helped with world Gen: https://www.youtube.com/playlist?list=PLVsTSlfj0qsWEJ-5eMtXsYp03Y9yF1dEn
+
 public class World : MonoBehaviour
 {
     public int seed;
@@ -76,6 +78,14 @@ public class World : MonoBehaviour
         int z = Mathf.FloorToInt(pos.z / VoxelData.chunkWidth);
 
         return new ChunkCoord(x, z);
+    }
+
+    public Chunk GetChunkFromVector3(Vector3 pos)
+    {
+        int x = Mathf.FloorToInt(pos.x / VoxelData.chunkWidth);
+        int z = Mathf.FloorToInt(pos.z / VoxelData.chunkWidth);
+
+        return chunks[x, z];
     }
 
     void CheckViewDistance()
@@ -184,6 +194,7 @@ public class BlockType
 {
     public string blockName;
     public bool isSolid;
+    public Sprite icon;
 
     [Header("Texture Values")]
     public int backFaceTexture;

@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager gManager;
     public static UIManager uiManagerRef;
     public static World currentWorld;
+    public static CharacterController player;
 
 
     void Awake()
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
     {
         uiManagerRef = UIManager.uiManager;
         currentWorld = GameObject.Find("World").GetComponent<World>();
+        player = GameObject.Find("Player").GetComponent<CharacterController>();
     }
 
     // Update is called once per frame

@@ -7,10 +7,16 @@ public class UIManager : MonoBehaviour
 {
     public GameObject debugScreen;
     public static UIManager uiManager;
+    public RectTransform highlight;
+    public ItemSlot[] itemSlots;
+
+    int slotIndex = 0;
 
     private float timer;
     private float frameRate;
     private World worldRef;
+    private CharacterController playerRef;
+
 
     int halfWorldSizeInVoxels;
     int halfWorldSizeInChunks;
@@ -27,13 +33,43 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         worldRef = GameManager.currentWorld;
+        playerRef = GameManager.player;
         halfWorldSizeInChunks = VoxelData.worldSizeInChunks / 2;
         halfWorldSizeInVoxels = VoxelData.worldSizeInVoxels / 2;
+
+        PopulateToolBarIcons();
     }
 
     void Update()
     {
         UpdateDebugScreen();
+        UpdateToolBar();
+    }
+
+    private void PopulateToolBarIcons()
+    {
+        foreach (ItemSlot slot in itemSlots)
+        {
+            slot.icon.sprite = worldRef.blockTypes[slot.itemID].icon;
+            slot.icon.enabled = true;
+        }
+    }
+
+    private void UpdateToolBar()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll != 0)
+        {
+            if (scroll > 0){ slotIndex--;}
+            else { slotIndex++; }
+
+            if (slotIndex > itemSlots.Length - 1) { slotIndex = 0; }
+            if (slotIndex < 0) {slotIndex = (itemSlots.Length - 1); }
+
+            highlight.position = itemSlots[slotIndex].icon.transform.position;
+            playerRef.selectedBlockIndex = itemSlots[slotIndex].itemID;
+        }
     }
 
     #region Debug Screen
@@ -66,4 +102,11 @@ public class UIManager : MonoBehaviour
 
     }
     #endregion
+}
+
+[System.Serializable]
+public class ItemSlot
+{
+    public byte itemID;
+    public Image icon;
 }
