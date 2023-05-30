@@ -566,7 +566,7 @@ MonoBehaviour:
     icon: {fileID: 567479326}
   - itemID: 9
     icon: {fileID: 489074594}
-  - itemID: 13
+  - itemID: 14
     icon: {fileID: 585507106}
 --- !u!4 &301125821
 Transform:
@@ -823,9 +823,11 @@ MonoBehaviour:
   player: {fileID: 1733575414}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: a648afbfca0230747938c2df6598ff49, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: ba627a1c9f7103b4b87ccf9b59a8ce2b, type: 2}
   blockTypes:
   - blockName: Air
     isSolid: 0
+    isTransparent: 1
     icon: {fileID: 0}
     backFaceTexture: 0
     frontFaceTexture: 0
@@ -835,6 +837,7 @@ MonoBehaviour:
     rightFaceTexture: 0
   - blockName: Dirt
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: -6943373833598557, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 0
     frontFaceTexture: 0
@@ -844,6 +847,7 @@ MonoBehaviour:
     rightFaceTexture: 0
   - blockName: Stone
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 5679390536090785944, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 3
     frontFaceTexture: 3
@@ -853,6 +857,7 @@ MonoBehaviour:
     rightFaceTexture: 3
   - blockName: Grass
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 5392753449730437660, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 1
     frontFaceTexture: 1
@@ -862,6 +867,7 @@ MonoBehaviour:
     rightFaceTexture: 1
   - blockName: Brick
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 448961105294916356, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 13
     frontFaceTexture: 13
@@ -871,6 +877,7 @@ MonoBehaviour:
     rightFaceTexture: 13
   - blockName: Planks
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: -9138616440249935319, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 7
     frontFaceTexture: 7
@@ -880,6 +887,7 @@ MonoBehaviour:
     rightFaceTexture: 7
   - blockName: Logs
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: -7538633921802359561, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 8
     frontFaceTexture: 8
@@ -889,6 +897,7 @@ MonoBehaviour:
     rightFaceTexture: 8
   - blockName: Coal Ore
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 0}
     backFaceTexture: 4
     frontFaceTexture: 4
@@ -898,6 +907,7 @@ MonoBehaviour:
     rightFaceTexture: 4
   - blockName: Bedrock
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: -4219558403781695398, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 6
     frontFaceTexture: 6
@@ -907,6 +917,7 @@ MonoBehaviour:
     rightFaceTexture: 6
   - blockName: Sand
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 6181873364862223445, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 10
     frontFaceTexture: 10
@@ -916,6 +927,7 @@ MonoBehaviour:
     rightFaceTexture: 10
   - blockName: Steel Plating
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 0}
     backFaceTexture: 11
     frontFaceTexture: 11
@@ -925,6 +937,7 @@ MonoBehaviour:
     rightFaceTexture: 11
   - blockName: Water
     isSolid: 0
+    isTransparent: 1
     icon: {fileID: 0}
     backFaceTexture: 12
     frontFaceTexture: 12
@@ -934,6 +947,7 @@ MonoBehaviour:
     rightFaceTexture: 12
   - blockName: Snow
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: 0}
     backFaceTexture: 15
     frontFaceTexture: 15
@@ -943,6 +957,7 @@ MonoBehaviour:
     rightFaceTexture: 15
   - blockName: Cobble Stone
     isSolid: 1
+    isTransparent: 0
     icon: {fileID: -1501523072523359806, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
     backFaceTexture: 5
     frontFaceTexture: 5
@@ -950,6 +965,16 @@ MonoBehaviour:
     bottomFaceTexture: 5
     leftFaceTexture: 5
     rightFaceTexture: 5
+  - blockName: Glass
+    isSolid: 1
+    isTransparent: 1
+    icon: {fileID: 0}
+    backFaceTexture: 16
+    frontFaceTexture: 16
+    topFaceTexture: 16
+    bottomFaceTexture: 16
+    leftFaceTexture: 16
+    rightFaceTexture: 16
   gravity: -19.8
 --- !u!4 &570045370
 Transform:

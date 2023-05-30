@@ -17,19 +17,21 @@ public class GameManager : MonoBehaviour
         { DontDestroyOnLoad(this.gameObject); gManager = this; }
         else if (gManager != this)
         { Destroy(this.gameObject); }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         uiManagerRef = UIManager.uiManager;
         currentWorld = GameObject.Find("World").GetComponent<World>();
         player = GameObject.Find("Player").GetComponent<CharacterController>();
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
-       
+        Debug.Log(currentWorld);
     }
 }

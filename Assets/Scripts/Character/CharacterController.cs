@@ -129,6 +129,7 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (worldReference == null) { worldReference = GameManager.currentWorld;  return; }
         charModel.transform.localRotation = Quaternion.Euler(0, mouseXRotation, 0);
 
         switch (behavior)

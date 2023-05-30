@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        //if (worldRef == null) { worldRef = GameManager.currentWorld; return; }
         UpdateDebugScreen();
         UpdateToolBar();
     }
