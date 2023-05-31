@@ -15,10 +15,10 @@ MonoBehaviour:
   presetBehavior: 0
   presetWalkSpeed: 4
   presetSprintSpeed: 7
-  presetJumpHeight: 6.8
+  presetJumpHeight: 6.7
   presetCharName: Guy
   presetNickName: Sgt. Guy
   presetAge: 20
   presetHealth: 100
-  presetCharacterWidth: 0.45
-  presetCharacterHeight: 1.8
+  presetCharacterWidth: 0.3
+  presetCharacterHeight: 2

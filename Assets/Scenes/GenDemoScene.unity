@@ -566,7 +566,7 @@ MonoBehaviour:
     icon: {fileID: 567479326}
   - itemID: 9
     icon: {fileID: 489074594}
-  - itemID: 14
+  - itemID: 11
     icon: {fileID: 585507106}
 --- !u!4 &301125821
 Transform:
@@ -936,7 +936,7 @@ MonoBehaviour:
     leftFaceTexture: 11
     rightFaceTexture: 11
   - blockName: Water
-    isSolid: 0
+    isSolid: 1
     isTransparent: 1
     icon: {fileID: 0}
     backFaceTexture: 12
@@ -975,6 +975,16 @@ MonoBehaviour:
     bottomFaceTexture: 16
     leftFaceTexture: 16
     rightFaceTexture: 16
+  - blockName: Leaves
+    isSolid: 1
+    isTransparent: 1
+    icon: {fileID: 0}
+    backFaceTexture: 24
+    frontFaceTexture: 24
+    topFaceTexture: 24
+    bottomFaceTexture: 24
+    leftFaceTexture: 24
+    rightFaceTexture: 24
   gravity: -19.8
 --- !u!4 &570045370
 Transform:
