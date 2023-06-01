@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (ItemSlot slot in itemSlots)
         {
-            slot.icon.sprite = worldRef.blockTypes[slot.itemID].icon;
+            slot.icon.sprite = worldRef.blockTypes[worldRef.GetID(slot.itemID)].icon;
             slot.icon.enabled = true;
         }
     }
@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
             if (slotIndex < 0) {slotIndex = (itemSlots.Length - 1); }
 
             highlight.position = itemSlots[slotIndex].icon.transform.position;
-            playerRef.selectedBlockIndex = itemSlots[slotIndex].itemID;
+            playerRef.selectedBlockIndex = worldRef.GetID(itemSlots[slotIndex].itemID);
         }
     }
 
@@ -108,6 +108,6 @@ public class UIManager : MonoBehaviour
 [System.Serializable]
 public class ItemSlot
 {
-    public byte itemID;
+    public Item.ID itemID;
     public Image icon;
 }

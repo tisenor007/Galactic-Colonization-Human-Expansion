@@ -32,7 +32,7 @@ public class BiomeAttributes : ScriptableObject
 public class Lode
 {
     public string lodeName;
-    public byte blockID;
+    public Item.ID blockID;
     public int minHeight;
     public int maxHeight;
     public float scale;

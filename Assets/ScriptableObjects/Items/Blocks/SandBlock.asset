@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c5692395af98cc428a4e7a793f345c9, type: 3}
+  m_Name: SandBlock
+  m_EditorClassIdentifier: 
+  itemName: Sand
+  icon: {fileID: 6181873364862223445, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
+  isStackable: 1
+  stackLimit: 64
+  itemID: 5
+  isSolid: 1
+  isTransparent: 0
+  backFaceTexture: 10
+  frontFaceTexture: 10
+  topFaceTexture: 10
+  bottomFaceTexture: 10
+  leftFaceTexture: 10
+  rightFaceTexture: 10

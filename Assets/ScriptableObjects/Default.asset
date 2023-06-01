@@ -31,7 +31,7 @@ MonoBehaviour:
     threshold: 0.5
     noiseOffset: 0
   - lodeName: Sand
-    blockID: 9
+    blockID: 5
     minHeight: 40
     maxHeight: 60
     scale: 0.2
@@ -45,7 +45,7 @@ MonoBehaviour:
     threshold: 0.57
     noiseOffset: -500
   - lodeName: Coal Ore
-    blockID: 7
+    blockID: 15
     minHeight: 0
     maxHeight: 30
     scale: 0.2

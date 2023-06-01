@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c5692395af98cc428a4e7a793f345c9, type: 3}
+  m_Name: CoalOreBlock
+  m_EditorClassIdentifier: 
+  itemName: Coal Ore
+  icon: {fileID: 0}
+  isStackable: 1
+  stackLimit: 64
+  itemID: 15
+  isSolid: 1
+  isTransparent: 0
+  backFaceTexture: 4
+  frontFaceTexture: 4
+  topFaceTexture: 4
+  bottomFaceTexture: 4
+  leftFaceTexture: 4
+  rightFaceTexture: 4

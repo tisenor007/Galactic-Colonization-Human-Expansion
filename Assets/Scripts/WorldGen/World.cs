@@ -32,6 +32,11 @@ public class World : MonoBehaviour
     Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
     public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
 
+    private void Awake()
+    {
+        foreach (BlockType blockType in blockTypes){ blockType.SetPresetVariables(); }
+    }
+
     private void Start()
     {
         Random.InitState(seed);
@@ -113,10 +118,10 @@ public class World : MonoBehaviour
 
         while (modifications.Count > 0)
         {
-            //Queue<VoxelMod> queue = modifications.Dequeue();
+            Queue<VoxelMod> queue = modifications.Dequeue();
             //new line to solve error
-            Queue<VoxelMod> queue = new Queue<VoxelMod>();
-            queue = modifications.Dequeue();
+            //Queue<VoxelMod> queue = new Queue<VoxelMod>();
+            //queue = modifications.Dequeue();
 
             while (queue.Count > 0)
             {
@@ -217,38 +222,66 @@ public class World : MonoBehaviour
 
     }
 
+    public byte GetID(Item.ID wantedID)
+    {
+        for (int i = 0; i <= blockTypes.Length - 1; i++)
+        {
+            if (blockTypes[i].presetBlockData.itemID == wantedID)
+            { return (byte)i; }
+        }
+
+        return 0;
+    }
+
     public byte GetVoxel (Vector3 pos)
     {
         int yPos = Mathf.FloorToInt(pos.y);
-
+        byte voxelValue = 0;
         /* IMMUTABLE PASS */
-
+        
         //if outside world, return air.
-        if (!isVoxelInWorld(pos)) { return 0; }
+        if (!isVoxelInWorld(pos)) 
+        {
+            return GetID(Item.ID.AIR);
+        }
 
         //if bottom block of chunk, return bedrock
-        if (yPos == 0) { return 8; }
+        if (yPos == 0) 
+        {
+            return GetID(Item.ID.BEDROCK);
+        }
 
         /* BASIC TERRAIN PASS */
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + biome.solidGroundHeight;
-        byte voxelValue = 0;
-        if (yPos == terrainHeight) { voxelValue = 3; }
-        else if (yPos < terrainHeight && yPos > terrainHeight - 4) { voxelValue = 1; }
-        else if (yPos > terrainHeight) { return 0; }
-        else { voxelValue = 2; }
+        if (yPos == terrainHeight) {
+            voxelValue = GetID(Item.ID.GRASS);
+        }
+        else if (yPos < terrainHeight && yPos > terrainHeight - 4) {
+            voxelValue = GetID(Item.ID.DIRT);
+        }
+        else if (yPos > terrainHeight) {
+            voxelValue = GetID(Item.ID.AIR);
+        }
+        else {
+            voxelValue = GetID(Item.ID.STONE);
+        }
 
         /* SECOND PASS */
 
-        if (voxelValue == 2)
+        if (voxelValue == GetID(Item.ID.STONE))
         {
+           
             foreach (Lode lode in biome.lodes)
             {
                 if (yPos > lode.minHeight && yPos < lode.maxHeight)
                 {
-                    if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold)) 
-                    { voxelValue = lode.blockID; }
+                    if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
+                    {
+                        voxelValue = GetID(lode.blockID);
+                    }
                 }
             }
+            
         }
 
         /* TREE PASS */
@@ -256,17 +289,17 @@ public class World : MonoBehaviour
         if (yPos == terrainHeight)
         {
             if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treeZoneScale) > biome.treeZoneThreshold)
-            { 
-                
-                voxelValue = 3;
+            {
+                voxelValue = GetID(Item.ID.GRASS);
                 if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treePlacementScale) > biome.treePlacementThreshold)
-                { 
-                    
-                    voxelValue = 1;
+                {
+
+                    voxelValue = GetID(Item.ID.DIRT);
                     modifications.Enqueue(Structure.MakeTree(pos, biome.maxTreeHeight, biome.maxTreeHeight));
                 }
             }
         }
+        
         return voxelValue; 
     }
 
@@ -290,19 +323,36 @@ public class World : MonoBehaviour
 [System.Serializable]
 public class BlockType
 {
-    public string blockName;
-    public bool isSolid;
-    public bool isTransparent;
-    public Sprite icon;
+    public BlockData presetBlockData;
+
+    [HideInInspector] public bool isSolid;
+    [HideInInspector] public bool isTransparent;
+    [HideInInspector] public Sprite icon;
+    private string blockName;
 
     [Header("Texture Values")]
-    public int backFaceTexture;
-    public int frontFaceTexture;
-    public int topFaceTexture;
-    public int bottomFaceTexture;
-    public int leftFaceTexture;
-    public int rightFaceTexture;
+    private int backFaceTexture;
+    private int frontFaceTexture;
+    private int topFaceTexture;
+    private int bottomFaceTexture;
+    private int leftFaceTexture;
+    private int rightFaceTexture;
     //Back, Front, Top, Bottom, Left, Right
+
+    public void SetPresetVariables()
+    {
+        blockName = presetBlockData.itemName;
+        isSolid = presetBlockData.isSolid;
+        isTransparent = presetBlockData.isTransparent;
+        icon = presetBlockData.icon;
+
+        backFaceTexture = presetBlockData.backFaceTexture;
+        frontFaceTexture = presetBlockData.frontFaceTexture;
+        topFaceTexture = presetBlockData.topFaceTexture;
+        bottomFaceTexture = presetBlockData.bottomFaceTexture;
+        leftFaceTexture = presetBlockData.leftFaceTexture;
+        rightFaceTexture = presetBlockData.rightFaceTexture;
+    }
 
     public int GetTextureID(int faceIndex)
     {

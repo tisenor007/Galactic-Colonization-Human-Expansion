@@ -211,7 +211,7 @@ public class CharacterController : MonoBehaviour
         if (highlightBlock.gameObject.activeSelf)
         {
             if (Input.GetMouseButtonDown(attackInput)) 
-            { worldReference.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0); }
+            { worldReference.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, worldReference.GetID(Item.ID.AIR)); }
 
             if (Input.GetMouseButtonDown(blockInput))
             { worldReference.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlockIndex); }

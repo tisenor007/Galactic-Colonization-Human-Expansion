@@ -23,7 +23,7 @@ public static class Structure
                 for (int z = -3; z < 4; z++)
                 {
                     //CAUSES ERRORS?
-                    //queue.Enqueue(new VoxelMod(new Vector3(pos.x + x, pos.y + height + y, pos.z + z), 15));
+                    queue.Enqueue(new VoxelMod(new Vector3(pos.x + x, pos.y + height + y, pos.z + z), 15));
                 }
             }
         }
