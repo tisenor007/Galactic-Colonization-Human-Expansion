@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : MonoBehaviour //class is getting pretty crowded, I might abandon behaviours and make subclasses...
 {
     //determines what the charater will be (including player)
     public enum CharBehavior
@@ -63,6 +63,7 @@ public class CharacterController : MonoBehaviour
     public GameObject playerCamTarget;
     public GameObject charModel;
     public GameObject playerCam;
+    public Inventory inventory;
 
     public Transform highlightBlock;
     public Transform placeBlock;
@@ -83,6 +84,8 @@ public class CharacterController : MonoBehaviour
     private KeyCode jumpInput = KeyCode.Space;
     private KeyCode toggleFPInput = KeyCode.F5;
     private KeyCode toggleDebugScreenInput = KeyCode.F3;
+    private KeyCode dropItemInput = KeyCode.Q;
+    private KeyCode viewInventory = KeyCode.I;
     private int attackInput = 0;
     private int blockInput = 1;
 
@@ -103,6 +106,7 @@ public class CharacterController : MonoBehaviour
         desiredCamPosition = playerCamTarget.transform.GetChild(0);
         playerHead = charModel.transform.GetChild(0).gameObject;
         SetPresetStats();
+
         currMoveState = MoveState.IDLE;
         currentCamAngle = CameraAngle.FIRST_PERSON;
         Cursor.lockState = CursorLockMode.Locked;
@@ -194,6 +198,7 @@ public class CharacterController : MonoBehaviour
     #region PlayerFunctions
     private void UpdatePlayerMovement()
     {
+        //Input is getting crowded.... make a input manager in the future?
         if (!PlayerIsMoving() && isGrounded) { currMoveState = MoveState.IDLE; }
         //Input //would be a switch statment, however, inputs can be pressed/function at the same time....
         if (Input.GetKey(forwardInput)) { vertical = 1; }//charMoveDirection += new Vector3(desiredCamPosition.forward.x, 0, desiredCamPosition.forward.z); }
@@ -207,15 +212,12 @@ public class CharacterController : MonoBehaviour
         if (Input.GetKey(sprintInput) && PlayerIsMoving() && isGrounded) { currMoveState = MoveState.SPRINTING; }
         if (Input.GetKeyDown(toggleFPInput)) { CycleThroughCamAngle(); }
         if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.uiManagerRef.ToggleDebugScreen(); }
-
-        if (highlightBlock.gameObject.activeSelf)
-        {
-            if (Input.GetMouseButtonDown(attackInput)) 
-            { worldReference.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, worldReference.GetID(Item.ID.AIR)); }
-
-            if (Input.GetMouseButtonDown(blockInput))
-            { worldReference.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlockIndex); }
-        }
+        if (Input.GetMouseButtonDown(attackInput) && highlightBlock.gameObject.activeSelf) 
+        { inventory.CollectItem(this); }
+        if (Input.GetMouseButtonDown(blockInput) && highlightBlock.gameObject.activeSelf)
+        { inventory.toolBarSlots[inventory.slotIndex].UseItem(worldReference, this); }
+        if (Input.GetKeyDown(dropItemInput)) { inventory.toolBarSlots[inventory.slotIndex].RemoveItem(1, true); }
+        if (Input.GetKeyDown(viewInventory)) { GameManager.uiManagerRef.ToggleInventory(); }
     }
 
     private void PlaceCursorBlocks()
@@ -272,6 +274,7 @@ public class CharacterController : MonoBehaviour
                 break;
         }
     }
+
 
     private bool PlayerIsMoving()
     {

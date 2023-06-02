@@ -6,11 +6,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameObject debugScreen;
+    public GameObject inventoryUI;
     public static UIManager uiManager;
     public RectTransform highlight;
-    public ItemSlot[] itemSlots;
-
-    int slotIndex = 0;
 
     private float timer;
     private float frameRate;
@@ -36,41 +34,19 @@ public class UIManager : MonoBehaviour
         playerRef = GameManager.player;
         halfWorldSizeInChunks = VoxelData.worldSizeInChunks / 2;
         halfWorldSizeInVoxels = VoxelData.worldSizeInVoxels / 2;
-
-        PopulateToolBarIcons();
     }
 
     void Update()
     {
         //if (worldRef == null) { worldRef = GameManager.currentWorld; return; }
         UpdateDebugScreen();
-        UpdateToolBar();
+
+        playerRef.inventory.UpdateToolBarUI(this.highlight);
     }
 
-    private void PopulateToolBarIcons()
+    public void ToggleInventory()
     {
-        foreach (ItemSlot slot in itemSlots)
-        {
-            slot.icon.sprite = worldRef.blockTypes[worldRef.GetID(slot.itemID)].icon;
-            slot.icon.enabled = true;
-        }
-    }
-
-    private void UpdateToolBar()
-    {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-
-        if (scroll != 0)
-        {
-            if (scroll > 0){ slotIndex--;}
-            else { slotIndex++; }
-
-            if (slotIndex > itemSlots.Length - 1) { slotIndex = 0; }
-            if (slotIndex < 0) {slotIndex = (itemSlots.Length - 1); }
-
-            highlight.position = itemSlots[slotIndex].icon.transform.position;
-            playerRef.selectedBlockIndex = worldRef.GetID(itemSlots[slotIndex].itemID);
-        }
+        inventoryUI.SetActive(!inventoryUI.activeSelf);
     }
 
     #region Debug Screen
@@ -103,11 +79,4 @@ public class UIManager : MonoBehaviour
 
     }
     #endregion
-}
-
-[System.Serializable]
-public class ItemSlot
-{
-    public Item.ID itemID;
-    public Image icon;
 }

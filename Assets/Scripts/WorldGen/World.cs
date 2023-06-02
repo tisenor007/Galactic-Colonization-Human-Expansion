@@ -222,15 +222,30 @@ public class World : MonoBehaviour
 
     }
 
-    public byte GetID(Item.ID wantedID)
+    public byte GetByteFromID(Item.ID id)
     {
         for (int i = 0; i <= blockTypes.Length - 1; i++)
         {
-            if (blockTypes[i].presetBlockData.itemID == wantedID)
+            if (blockTypes[i].presetBlockData.itemID == id)
             { return (byte)i; }
         }
 
         return 0;
+    }
+
+    public BlockType GetBlockTypeFromID(Item.ID id)
+    {
+        return blockTypes[GameManager.currentWorld.GetByteFromID(id)];
+    }
+
+    public void DestroyVoxel(Transform highlightBlock)
+    {
+        GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, GetByteFromID(Item.ID.AIR));
+    }
+
+    public void PlaceVoxel(Transform placeBlock, byte selectedBlock)
+    {
+        GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlock);
     }
 
     public byte GetVoxel (Vector3 pos)
@@ -242,33 +257,33 @@ public class World : MonoBehaviour
         //if outside world, return air.
         if (!isVoxelInWorld(pos)) 
         {
-            return GetID(Item.ID.AIR);
+            return GetByteFromID(Item.ID.AIR);
         }
 
         //if bottom block of chunk, return bedrock
         if (yPos == 0) 
         {
-            return GetID(Item.ID.BEDROCK);
+            return GetByteFromID(Item.ID.BEDROCK);
         }
 
         /* BASIC TERRAIN PASS */
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + biome.solidGroundHeight;
         if (yPos == terrainHeight) {
-            voxelValue = GetID(Item.ID.GRASS);
+            voxelValue = GetByteFromID(Item.ID.GRASS);
         }
         else if (yPos < terrainHeight && yPos > terrainHeight - 4) {
-            voxelValue = GetID(Item.ID.DIRT);
+            voxelValue = GetByteFromID(Item.ID.DIRT);
         }
         else if (yPos > terrainHeight) {
-            voxelValue = GetID(Item.ID.AIR);
+            voxelValue = GetByteFromID(Item.ID.AIR);
         }
         else {
-            voxelValue = GetID(Item.ID.STONE);
+            voxelValue = GetByteFromID(Item.ID.STONE);
         }
 
         /* SECOND PASS */
 
-        if (voxelValue == GetID(Item.ID.STONE))
+        if (voxelValue == GetByteFromID(Item.ID.STONE))
         {
            
             foreach (Lode lode in biome.lodes)
@@ -277,7 +292,7 @@ public class World : MonoBehaviour
                 {
                     if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
                     {
-                        voxelValue = GetID(lode.blockID);
+                        voxelValue = GetByteFromID(lode.blockID);
                     }
                 }
             }
@@ -290,11 +305,11 @@ public class World : MonoBehaviour
         {
             if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treeZoneScale) > biome.treeZoneThreshold)
             {
-                voxelValue = GetID(Item.ID.GRASS);
+                voxelValue = GetByteFromID(Item.ID.GRASS);
                 if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treePlacementScale) > biome.treePlacementThreshold)
                 {
 
-                    voxelValue = GetID(Item.ID.DIRT);
+                    voxelValue = GetByteFromID(Item.ID.DIRT);
                     modifications.Enqueue(Structure.MakeTree(pos, biome.maxTreeHeight, biome.maxTreeHeight));
                 }
             }
