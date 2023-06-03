@@ -103,23 +103,35 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     void Start()
     {
         worldReference = GameManager.currentWorld;
-        desiredCamPosition = playerCamTarget.transform.GetChild(0);
-        playerHead = charModel.transform.GetChild(0).gameObject;
         SetPresetStats();
-
         currMoveState = MoveState.IDLE;
-        currentCamAngle = CameraAngle.FIRST_PERSON;
-        Cursor.lockState = CursorLockMode.Locked;
+
+        switch (behavior)
+        {
+            case CharBehavior.PLAYER:
+                desiredCamPosition = playerCamTarget.transform.GetChild(0);
+                playerHead = charModel.transform.GetChild(0).gameObject;
+                currentCamAngle = CameraAngle.FIRST_PERSON;
+                CalculateVelocity();
+                transform.Translate(velocity, Space.World);
+                break;
+            case CharBehavior.HOSTILE:
+                break;
+            case CharBehavior.NEUTRAL:
+                break;
+            case CharBehavior.FRIENDLY:
+                break;
+        };
     }
 
     private void FixedUpdate()
     {
         if (jumpRequest) { Jump(); }
+        CalculateVelocity();
+        transform.Translate(velocity, Space.World);
         switch (behavior)
         {
             case CharBehavior.PLAYER:
-                CalculateVelocity();
-                transform.Translate(velocity, Space.World);
                 break;
             case CharBehavior.HOSTILE:
                 break;
@@ -134,11 +146,11 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     void Update()
     {
         //if (worldReference == null) { worldReference = GameManager.currentWorld;  return; }
-        charModel.transform.localRotation = Quaternion.Euler(0, mouseXRotation, 0);
 
         switch (behavior)
         {
             case CharBehavior.PLAYER:
+                charModel.transform.localRotation = Quaternion.Euler(0, mouseXRotation, 0);
                 RunPlayerBehavior();
                 break;
             case CharBehavior.HOSTILE:
@@ -152,9 +164,6 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
 
     protected void RunPlayerBehavior()
     {
-        playerCam.SetActive(true);
-        UpdatePlayerCam();
-        PlaceCursorBlocks();
         switch (currMoveState)
         {
             case MoveState.IDLE:
@@ -176,6 +185,10 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
                 UpdatePlayerMovement();
                 break;
         }
+        if (GameManager.gManager.currentGameState == GameManager.GameState.INVENTORY) { return; }
+        playerCam.SetActive(true);
+        UpdatePlayerCam();
+        PlaceCursorBlocks();
     }
 
     #region StatHandling
@@ -213,7 +226,7 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
         if (Input.GetKeyDown(toggleFPInput)) { CycleThroughCamAngle(); }
         if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.uiManagerRef.ToggleDebugScreen(); }
         if (Input.GetMouseButtonDown(attackInput) && highlightBlock.gameObject.activeSelf) 
-        { inventory.CollectItem(this); }
+        { inventory.AutoCollectItem(this); }
         if (Input.GetMouseButtonDown(blockInput) && highlightBlock.gameObject.activeSelf)
         { inventory.toolBarSlots[inventory.slotIndex].UseItem(worldReference, this); }
         if (Input.GetKeyDown(dropItemInput)) { inventory.toolBarSlots[inventory.slotIndex].RemoveItem(1, true); }

@@ -46,6 +46,15 @@ public class UIManager : MonoBehaviour
 
     public void ToggleInventory()
     {
+        switch (GameManager.gManager.currentGameState)
+        {
+            case GameManager.GameState.GAMEPLAY:
+                GameManager.gManager.currentGameState = GameManager.GameState.INVENTORY;
+                break;
+            case GameManager.GameState.INVENTORY:
+                GameManager.gManager.currentGameState = GameManager.GameState.GAMEPLAY;
+                break;
+        }
         inventoryUI.SetActive(!inventoryUI.activeSelf);
     }
 

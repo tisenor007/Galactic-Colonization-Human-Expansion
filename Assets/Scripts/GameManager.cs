@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameState
+    {
+        GAMEPLAY,
+        INVENTORY,
+        PAUSE,
+        MAIN_MENU
+    }
     public static GameManager gManager;
     public static UIManager uiManagerRef;
     public static World currentWorld;
     public static CharacterController player;
+    public GameState currentGameState;
 
 
     void Awake()
@@ -20,6 +28,8 @@ public class GameManager : MonoBehaviour
 
         uiManagerRef = UIManager.uiManager;
         currentWorld = GameObject.Find("World").GetComponent<World>();
+        //starts on gameplay for testing purposes
+        currentGameState = GameState.GAMEPLAY;
         player = GameObject.Find("Player").GetComponent<CharacterController>();
     }
 
@@ -32,6 +42,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(currentWorld);
+        //Debug.Log(currentGameState);
+        switch (currentGameState)
+        {
+            case GameState.GAMEPLAY:
+                Cursor.lockState = CursorLockMode.Locked;
+                break;
+            case GameState.INVENTORY:
+                Cursor.lockState = CursorLockMode.Confined;
+                break;
+        }
     }
 }
