@@ -8,7 +8,8 @@ public class ItemObject : MonoBehaviour
     public Text itemText;
     public int itemAmount;
     public CustomPhysics physics;
-    public GameObject itemAppearance;
+    public GameObject itemObject;
+    public Image itemAppearance;
     public Item.ID itemObjectID;
     [HideInInspector] public Item itemData;
     private float rotationSpeed = 35f;
@@ -17,21 +18,25 @@ public class ItemObject : MonoBehaviour
     void Start()
     {
         itemData = GameManager.currentWorld.blockTypes[GameManager.currentWorld.GetByteFromID(itemObjectID)].presetBlockData;
-        physics.CalculateVelocity(itemAppearance, 0);
+        physics.CalculateVelocity(itemObject, 0);
         transform.Translate(physics.velocity, Space.World);
         transform.position = GameManager.player.transform.position;
+        //CreateAppearance();
+        this.transform.parent = GameManager.currentWorld.GetChunkFromVector3(this.transform.position).chunkObject.transform;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        physics.CalculateVelocity(itemAppearance, 0);
+        physics.CalculateVelocity(itemObject, 0);
         transform.Translate(physics.velocity, Space.World);
     }
 
     void Update()
     {
-        GameManager.uiManagerRef.UpdateItemObjectText(itemText, visableTextDistance, itemData, this.gameObject);  
+        GameManager.uiManagerRef.UpdateItemObjectText(itemText, visableTextDistance, itemData, this.gameObject, itemAmount);
+        GameManager.uiManagerRef.RotateUIToFaceCamera(itemText.gameObject.transform, GameManager.player.playerCam);
+        if (itemAppearance.sprite != itemData.icon) { itemAppearance.sprite = itemData.icon; }
         RotateItem();
     }
 

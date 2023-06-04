@@ -8,7 +8,7 @@ public class Chunk
 {
     public ChunkCoord coord;
 
-    GameObject chunkObject;
+    public GameObject chunkObject;
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
