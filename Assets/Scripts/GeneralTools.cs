@@ -2,10 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class GeneralTools : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+
 //Helped with world Gen: https://www.youtube.com/playlist?list=PLVsTSlfj0qsWEJ-5eMtXsYp03Y9yF1dEn
 public static class Noise
 {
-    public static float Get2DPerlin (Vector2 positon, float offset, float scale)
+    public static float Get2DPerlin(Vector2 positon, float offset, float scale)
     {
         return Mathf.PerlinNoise((positon.x + 0.1f) / VoxelData.chunkWidth * scale + offset, (positon.y + 0.1f) / VoxelData.chunkWidth * scale + offset);
     }
@@ -27,7 +42,7 @@ public static class Noise
 
         if ((AB + BC + AC + BA + CB + CA) / 6 > threshold)
         { return true; }
-        else 
+        else
         { return false; }
     }
 }

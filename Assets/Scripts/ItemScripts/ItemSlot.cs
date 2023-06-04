@@ -37,7 +37,7 @@ public class ItemSlot : MonoBehaviour
             {
                 thisWorld.PlaceVoxel(player.placeBlock, player.selectedBlockIndex);
 
-                if (player.inventory.currInventoryType == Inventory.InventoryType.SURVIVAL) { RemoveItem(1, false); }
+                if (player.inventory.currInventoryType == Inventory.InventoryType.SURVIVAL) { RemoveItem(1); }
                 else if (player.inventory.currInventoryType == Inventory.InventoryType.CREATIVE) { /*NOTHING*/ }
             }
         }
@@ -56,13 +56,20 @@ public class ItemSlot : MonoBehaviour
         amount = amount + amnt;
     }
 
-    public void RemoveItem(int amnt, bool dropItem)
+    public void RemoveItem(int amnt)
     {
         amount = amount - amnt;
-        if (dropItem)
-        {
-            //dropitem();
-        }
+    }
+
+    public void DropItem(int amnt, Vector3 dropPos)
+    {
+        if (itemID == Item.ID.AIR) { return; }
+        RemoveItem(amnt);
+        GameObject objectToSpawn;
+        objectToSpawn = GameObject.Instantiate(storedItem.physicalItem, dropPos, Quaternion.identity);
+        objectToSpawn.GetComponent<ItemObject>().itemObjectID = itemID;
+        objectToSpawn.GetComponent<ItemObject>().itemAmount = amnt;
+       
     }
 
     public void ClearItemSlot()

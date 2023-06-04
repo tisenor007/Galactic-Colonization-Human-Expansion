@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: AirBlock
   m_EditorClassIdentifier: 
   itemName: Air
-  itemID: 0
   icon: {fileID: 0}
   isStackable: 0
+  stackLimit: 0
+  itemID: 0
+  physicalItem: {fileID: 0}
   isSolid: 0
   isTransparent: 1
   backFaceTexture: 0

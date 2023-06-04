@@ -32,4 +32,6 @@ public class Item : ScriptableObject
     public int stackLimit;
 
     public ID itemID;
+
+    public GameObject physicalItem;
 }

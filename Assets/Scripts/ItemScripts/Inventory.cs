@@ -44,6 +44,11 @@ public class Inventory : MonoBehaviour
     {
         UpdateItemSlots();
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            //CollectItemObject();
+        }
+
         if (GameManager.gManager.currentGameState != GameManager.GameState.INVENTORY) { return; }
 
         cursorItemSlot.gameObject.transform.position = Input.mousePosition;
@@ -150,6 +155,8 @@ public class Inventory : MonoBehaviour
 
     public void ManageSlotLeftClick(ItemSlot clickedSlot)
     {
+        if (clickedSlot == null && cursorItemSlot.itemID != Item.ID.AIR) { cursorItemSlot.DropItem(cursorItemSlot.amount, playerRef.defaultItemDropPos); }
+
         if (clickedSlot == null) { return; }
 
         if (cursorItemSlot.itemID == Item.ID.AIR && clickedSlot.itemID == Item.ID.AIR)
@@ -170,13 +177,13 @@ public class Inventory : MonoBehaviour
 
         if (cursorItemSlot.itemID == Item.ID.AIR && clickedSlot.itemID != Item.ID.AIR)
         {
-            cursorItemSlot.AddItem(clickedSlot.storedItem, clickedSlot.amount / 2); clickedSlot.RemoveItem(clickedSlot.amount / 2, false);
+            cursorItemSlot.AddItem(clickedSlot.storedItem, clickedSlot.amount / 2); clickedSlot.RemoveItem(clickedSlot.amount / 2);
 
         }
 
         else if ((clickedSlot.itemID == Item.ID.AIR && cursorItemSlot.itemID != Item.ID.AIR) || clickedSlot.itemID == cursorItemSlot.itemID)
         {
-            clickedSlot.AddItem(cursorItemSlot.storedItem, 1); cursorItemSlot.RemoveItem(1, false);
+            clickedSlot.AddItem(cursorItemSlot.storedItem, 1); cursorItemSlot.RemoveItem(1);
         }
     }
 
@@ -235,7 +242,7 @@ public class Inventory : MonoBehaviour
             adder.amount = ((added.amount + adder.amount) - added.storedItem.stackLimit);
             added.AddItem(adder.storedItem, amountHolder);
         }
-        else { added.AddItem(adder.storedItem, adder.amount); adder.RemoveItem(adder.amount, false); }
+        else { added.AddItem(adder.storedItem, adder.amount); adder.RemoveItem(adder.amount); }
 
     }
 

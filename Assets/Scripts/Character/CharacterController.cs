@@ -45,18 +45,14 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     public int health;
     public float characterWidth;
     public float characterHeight;
+    public CustomPhysics physics;
 
     protected float currentSpeed;
     protected float charRotationSpeed = 10.0f;
-    private float verticalMomentum = 0;
     private bool jumpRequest;
     private MoveState currMoveState;
-    public bool isGrounded;
     //
     private World worldReference;
-    private Vector3 velocity;
-    private float horizontal = 0;
-    private float vertical = 0;
 
     //player variables
     [Header("Only Applies For Player:")]
@@ -73,6 +69,9 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
 
     public byte selectedBlockIndex = 1;
 
+    public LayerMask ignoreMask;
+    [HideInInspector] public Vector3 defaultItemDropPos;
+
     protected float mouseSensitivity = 4.0f;
     protected CameraAngle currentCamAngle;
 
@@ -85,15 +84,15 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     private KeyCode toggleFPInput = KeyCode.F5;
     private KeyCode toggleDebugScreenInput = KeyCode.F3;
     private KeyCode dropItemInput = KeyCode.Q;
-    private KeyCode viewInventory = KeyCode.I;
+    private KeyCode viewInventoryInput = KeyCode.I;
     private int attackInput = 0;
     private int blockInput = 1;
+    private KeyCode pickUpInventory = KeyCode.E;
 
 
     private Vector3 charMoveDirection;
     private float mouseYRotation = 0.0f;
     private float mouseXRotation = 0.0f;
-
     private Transform desiredCamPosition;
     //temporary....
     private GameObject playerHead;
@@ -105,6 +104,8 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
         worldReference = GameManager.currentWorld;
         SetPresetStats();
         currMoveState = MoveState.IDLE;
+        defaultItemDropPos = new Vector3(this.transform.position.x, this.transform.position.y + 2, this.transform.position.z + 5);
+        Move();
 
         switch (behavior)
         {
@@ -112,8 +113,6 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
                 desiredCamPosition = playerCamTarget.transform.GetChild(0);
                 playerHead = charModel.transform.GetChild(0).gameObject;
                 currentCamAngle = CameraAngle.FIRST_PERSON;
-                CalculateVelocity();
-                transform.Translate(velocity, Space.World);
                 break;
             case CharBehavior.HOSTILE:
                 break;
@@ -127,8 +126,7 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     private void FixedUpdate()
     {
         if (jumpRequest) { Jump(); }
-        CalculateVelocity();
-        transform.Translate(velocity, Space.World);
+        Move();
         switch (behavior)
         {
             case CharBehavior.PLAYER:
@@ -205,6 +203,9 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
         health = preset.presetHealth;
         characterWidth = preset.presetCharacterWidth;
         characterHeight = preset.presetCharacterHeight;
+
+        physics.entityWidth = characterWidth;
+        physics.entityHeight = characterHeight;
     }
     #endregion
 
@@ -212,25 +213,37 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     private void UpdatePlayerMovement()
     {
         //Input is getting crowded.... make a input manager in the future?
-        if (!PlayerIsMoving() && isGrounded) { currMoveState = MoveState.IDLE; }
+        if (!PlayerIsMoving() && physics.isGrounded) { currMoveState = MoveState.IDLE; }
         //Input //would be a switch statment, however, inputs can be pressed/function at the same time....
-        if (Input.GetKey(forwardInput)) { vertical = 1; }//charMoveDirection += new Vector3(desiredCamPosition.forward.x, 0, desiredCamPosition.forward.z); }
-        if (Input.GetKey(backwardInput)) { vertical = -1; }//charMoveDirection += -new Vector3(desiredCamPosition.forward.x, 0, desiredCamPosition.forward.z); }
-        if (!Input.GetKey(forwardInput) && !Input.GetKey(backwardInput)) { vertical = 0; }
-        if (Input.GetKey(leftInput)) { horizontal = -1; }//charMoveDirection += -desiredCamPosition.right; }
-        if (Input.GetKey(rightInput)) { horizontal = 1; }//charMoveDirection += desiredCamPosition.right; }
-        if (!Input.GetKey(leftInput) && !Input.GetKey(rightInput)) { horizontal = 0; }
-        if (Input.GetKeyDown(jumpInput) && isGrounded) { jumpRequest = true; }
-        if (!Input.GetKey(sprintInput) && PlayerIsMoving() && isGrounded) { currMoveState = MoveState.WALKING; }
-        if (Input.GetKey(sprintInput) && PlayerIsMoving() && isGrounded) { currMoveState = MoveState.SPRINTING; }
+        if (Input.GetKey(forwardInput)) { physics.vertical = 1; }//charMoveDirection += new Vector3(desiredCamPosition.forward.x, 0, desiredCamPosition.forward.z); }
+        if (Input.GetKey(backwardInput)) { physics.vertical = -1; }//charMoveDirection += -new Vector3(desiredCamPosition.forward.x, 0, desiredCamPosition.forward.z); }
+        if (!Input.GetKey(forwardInput) && !Input.GetKey(backwardInput)) { physics.vertical = 0; }
+        if (Input.GetKey(leftInput)) { physics.horizontal = -1; }//charMoveDirection += -desiredCamPosition.right; }
+        if (Input.GetKey(rightInput)) { physics.horizontal = 1; }//charMoveDirection += desiredCamPosition.right; }
+        if (!Input.GetKey(leftInput) && !Input.GetKey(rightInput)) { physics.horizontal = 0; }
+        if (Input.GetKeyDown(jumpInput) && physics.isGrounded) { jumpRequest = true; }
+        if (!Input.GetKey(sprintInput) && PlayerIsMoving() && physics.isGrounded) { currMoveState = MoveState.WALKING; }
+        if (Input.GetKey(sprintInput) && PlayerIsMoving() && physics.isGrounded) { currMoveState = MoveState.SPRINTING; }
         if (Input.GetKeyDown(toggleFPInput)) { CycleThroughCamAngle(); }
         if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.uiManagerRef.ToggleDebugScreen(); }
         if (Input.GetMouseButtonDown(attackInput) && highlightBlock.gameObject.activeSelf) 
         { inventory.AutoCollectItem(this); }
         if (Input.GetMouseButtonDown(blockInput) && highlightBlock.gameObject.activeSelf)
         { inventory.toolBarSlots[inventory.slotIndex].UseItem(worldReference, this); }
-        if (Input.GetKeyDown(dropItemInput)) { inventory.toolBarSlots[inventory.slotIndex].RemoveItem(1, true); }
-        if (Input.GetKeyDown(viewInventory)) { GameManager.uiManagerRef.ToggleInventory(); }
+        if (Input.GetKeyDown(dropItemInput)) { inventory.toolBarSlots[inventory.slotIndex].DropItem(1, defaultItemDropPos); }
+        if (Input.GetKeyDown(viewInventoryInput)) { GameManager.uiManagerRef.ToggleInventory(); }
+        if (Input.GetKeyDown(pickUpInventory)) { CollectItemObject(); }
+    }
+
+    private void CollectItemObject()
+    {
+        if (Physics.Raycast(GameManager.player.playerCamTarget.transform.position, GameManager.player.playerCamTarget.transform.forward, out RaycastHit raycastHit, reach/2, ~ignoreMask))
+        { 
+            if (raycastHit.transform.parent.GetComponent<ItemObject>()) 
+            {
+                raycastHit.transform.parent.GetComponent<ItemObject>().OnThisItemCollected();
+            }
+        }
     }
 
     private void PlaceCursorBlocks()
@@ -308,117 +321,19 @@ public class CharacterController : MonoBehaviour //class is getting pretty crowd
     }
 
     #endregion
+
+    void Move()
+    {
+        physics.CalculateVelocity(charModel, currentSpeed);
+        transform.Translate(physics.velocity, Space.World);
+    }
+
     void Jump()
     {
-        verticalMomentum = jumpHeight;
+        physics.verticalMomentum = jumpHeight;
         currMoveState = MoveState.JUMPING;
-        isGrounded = false;
+        physics.isGrounded = false;
         jumpRequest = false;
     }
-    private void CalculateVelocity()
-    {
-        // Affect vertical momentum with gravity
-        if (verticalMomentum > worldReference.gravity) { verticalMomentum += Time.fixedDeltaTime * worldReference.gravity; }
-
-        velocity = ((charModel.transform.forward * vertical) + (charModel.transform.right * horizontal)).normalized * Time.deltaTime * currentSpeed;
-
-        //apply vertical momentum
-        velocity += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
-
-        if ((velocity.z > 0 && front) || (velocity.z < 0 && back))
-        { velocity.z = 0; }
-        if ((velocity.x > 0 && right) || (velocity.x < 0 && left))
-        { velocity.x = 0; }
-
-        if (velocity.y < 0)
-        { velocity.y = CheckDownSpeed(velocity.y); }
-        else if (velocity.y > 0)
-        { velocity.y = CheckUpSpeed(velocity.y); }
-    }
-
-    #region Collision
-    private float CheckDownSpeed(float downSpeed)
-    {
-        if (
-            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth)) ||
-            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + downSpeed, transform.position.z - characterWidth)) ||
-            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + downSpeed, transform.position.z + characterWidth)) ||
-            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + downSpeed, transform.position.z + characterWidth))
-            )
-        {
-            isGrounded = true;
-            return 0;
-        }
-        else
-        {
-            isGrounded = false;
-            return downSpeed;
-        }
-    }
-    private float CheckUpSpeed(float upSpeed)
-    {
-        if (
-            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth)) ||
-            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z - characterWidth)) ||
-            worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z + characterWidth)) ||
-            worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + characterHeight + upSpeed, transform.position.z + characterWidth))
-            )
-        {return 0;}
-        else
-        {return upSpeed;}
-    }
-
-    public bool front 
-    {
-        get
-        {
-            if (
-                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + characterWidth)) ||
-                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + characterWidth))
-                )
-            { return true; }
-            else
-            { return false; }
-        }
-    }
-    public bool back
-    {
-        get
-        {
-            if (
-                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - characterWidth)) ||
-                worldReference.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - characterWidth))
-                )
-            { return true; }
-            else
-            { return false; }
-        }
-    }
-    public bool left
-    {
-        get
-        {
-            if (
-                worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y, transform.position.z)) ||
-                worldReference.CheckForVoxel(new Vector3(transform.position.x - characterWidth, transform.position.y + 1f, transform.position.z))
-                )
-            { return true; }
-            else
-            { return false; }
-        }
-    }
-    public bool right
-    {
-        get
-        {
-            if (
-                worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y, transform.position.z)) ||
-                worldReference.CheckForVoxel(new Vector3(transform.position.x + characterWidth, transform.position.y + 1f, transform.position.z))
-                )
-            { return true; }
-            else
-            { return false; }
-        }
-    }
-    #endregion
+   
 }

@@ -64,6 +64,15 @@ public class UIManager : MonoBehaviour
         debugScreen.SetActive(!debugScreen.activeSelf);
     }
 
+    public void UpdateItemObjectText(Text itemText, float visableTextDistance, Item itemData, GameObject objectReference)
+    {
+        itemText.text = "(" + itemData.name + ") Press E to pick up.";
+        if (Vector3.Distance(GameManager.player.transform.position, objectReference.transform.position) <= visableTextDistance && !itemText.gameObject.activeSelf)
+        { itemText.gameObject.SetActive(true); }
+        if (Vector3.Distance(GameManager.player.transform.position, objectReference.transform.position) > visableTextDistance && itemText.gameObject.activeSelf)
+        { itemText.gameObject.SetActive(false); }
+    }
+
     private void UpdateDebugScreen()
     {
         string debugText = "Galactic Colonization: Human Expansion BETA v0.1";
