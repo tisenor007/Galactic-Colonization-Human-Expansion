@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewBlock", menuName = "Items/Block")]
 public class BlockData : Item
 {
-
     public bool isSolid;
     public bool isTransparent;
 

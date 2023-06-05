@@ -15,7 +15,7 @@ public class ItemObject : MonoBehaviour
     private float rotationSpeed = 35f;
     private float visableTextDistance = 5f;
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         itemData = GameManager.currentWorld.blockTypes[GameManager.currentWorld.GetByteFromID(itemObjectID)].presetBlockData;
         physics.CalculateVelocity(itemObject, 0);
@@ -26,13 +26,13 @@ public class ItemObject : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         physics.CalculateVelocity(itemObject, 0);
         transform.Translate(physics.velocity, Space.World);
     }
 
-    void Update()
+    public void Update()
     {
         GameManager.uiManagerRef.UpdateItemObjectText(itemText, visableTextDistance, itemData, this.gameObject, itemAmount);
         GameManager.uiManagerRef.RotateUIToFaceCamera(itemText.gameObject.transform, GameManager.player.playerCam);

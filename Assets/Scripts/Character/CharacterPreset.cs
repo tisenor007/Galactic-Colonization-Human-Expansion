@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CharacterPreset : ScriptableObject
 {
-    public CharacterController.CharBehavior presetBehavior;
+    //public CharacterController.CharBehavior presetBehavior;
     public float presetWalkSpeed;
     public float presetSprintSpeed;
     public float presetJumpHeight;

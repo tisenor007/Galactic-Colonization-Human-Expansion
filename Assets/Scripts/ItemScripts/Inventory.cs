@@ -6,14 +6,6 @@ using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
-    public enum InventoryType
-    {
-        SURVIVAL,
-        CREATIVE,
-        ADVENTURE,
-    }
-
-    public InventoryType currInventoryType;
     public ItemSlot[] toolBarSlots = new ItemSlot[9];
     public ItemSlot[] inventorySlots = new ItemSlot[36];
     public ItemSlot cursorItemSlot;
@@ -21,51 +13,33 @@ public class Inventory : MonoBehaviour
     [HideInInspector] public int slotIndex = 0;
 
     private World worldRef;
-    private CharacterController playerRef;
+    private Player playerRef;
     [SerializeField] private GraphicRaycaster m_Raycaster = null;
     private PointerEventData m_PointerEventData;
     [SerializeField] private EventSystem m_EventSystem = null;
 
-    void Awake()
+    public void Awake()
     {
 
     }
+
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         worldRef = GameManager.currentWorld;
         playerRef = GameManager.player;
 
-        if (currInventoryType == InventoryType.CREATIVE) { PopulateCreativeInventory(); }
+        if (playerRef.currentGameMode == Player.GameMode.CREATIVE) 
+        { PopulateCreativeInventory(); }
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         UpdateItemSlots();
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            //CollectItemObject();
-        }
-
-        if (GameManager.gManager.currentGameState != GameManager.GameState.INVENTORY) { return; }
-
-        cursorItemSlot.gameObject.transform.position = Input.mousePosition;
-
-        //will move to input manager in the future
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (Input.GetKey(KeyCode.LeftShift)) { AutoAlignItem(CheckForSlot()); }
-            else if (!Input.GetKey(KeyCode.LeftShift)) { ManageSlotLeftClick(CheckForSlot()); }
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            ManageSlotRightClick(CheckForSlot());
-        }
     }
 
-    public void AutoCollectItem( CharacterController player)
+    public void AutoCollectItem( Player player)
     {
         AutoFindSlot(worldRef.blockTypes[worldRef.GetChunkFromVector3(player.highlightBlock.position).GetVoxelFromGlobalVector3(player.highlightBlock.position)].
         presetBlockData).AddItem(worldRef.blockTypes[worldRef.GetChunkFromVector3(player.highlightBlock.position).GetVoxelFromGlobalVector3(player.highlightBlock.position)].
@@ -93,20 +67,6 @@ public class Inventory : MonoBehaviour
 
         if (playerRef.selectedBlockIndex != worldRef.GetByteFromID(toolBarSlots[slotIndex].itemID)) 
         { playerRef.selectedBlockIndex = worldRef.GetByteFromID(toolBarSlots[slotIndex].itemID); }
-    }
-
-    private void PopulateCreativeInventory()
-    {
-        foreach (ItemSlot tSlot in toolBarSlots) { tSlot.ClearItemSlot(); }
-        foreach (ItemSlot iSlot in inventorySlots) { iSlot.ClearItemSlot(); }
-
-        for (int i = 0; i < ((toolBarSlots.Length - 1) + (worldRef.blockTypes.Length - 1)); i++)
-        {
-            if (i <= toolBarSlots.Length - 1 && i <= worldRef.blockTypes.Length - 1)
-            {  toolBarSlots[i].AddItem(worldRef.blockTypes[(byte)i].presetBlockData, 1); }
-            else if (i > toolBarSlots.Length - 1 && i <= worldRef.blockTypes.Length - 1) 
-            { inventorySlots[i - toolBarSlots.Length].AddItem(worldRef.blockTypes[(byte)i].presetBlockData, 1); }
-        }
     }
 
     #region Slot_Management
@@ -143,7 +103,6 @@ public class Inventory : MonoBehaviour
         if (cursorItemSlot.itemID == Item.ID.AIR && clickedSlot.itemID == Item.ID.AIR)
         { return; }
 
-
         else if (nextEmptySlot != null && clickedSlot == nextCommonSlot)
         { SwitchItemSlots(clickedSlot, nextEmptySlot); }
 
@@ -155,7 +114,7 @@ public class Inventory : MonoBehaviour
 
     public void ManageSlotLeftClick(ItemSlot clickedSlot)
     {
-        if (clickedSlot == null && cursorItemSlot.itemID != Item.ID.AIR) { cursorItemSlot.DropItem(cursorItemSlot.amount, playerRef.defaultItemDropPos); }
+        if (clickedSlot == null && cursorItemSlot.itemID != Item.ID.AIR) { cursorItemSlot.DropItem(cursorItemSlot.amount, ref playerRef.defaultItemDropPos); }
 
         if (clickedSlot == null) { return; }
 
@@ -174,11 +133,9 @@ public class Inventory : MonoBehaviour
         if (cursorItemSlot.itemID == Item.ID.AIR && clickedSlot.itemID == Item.ID.AIR)
         { return; }
 
-
         if (cursorItemSlot.itemID == Item.ID.AIR && clickedSlot.itemID != Item.ID.AIR)
         {
             cursorItemSlot.AddItem(clickedSlot.storedItem, clickedSlot.amount / 2); clickedSlot.RemoveItem(clickedSlot.amount / 2);
-
         }
 
         else if ((clickedSlot.itemID == Item.ID.AIR && cursorItemSlot.itemID != Item.ID.AIR) || clickedSlot.itemID == cursorItemSlot.itemID)
@@ -187,6 +144,22 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public ItemSlot CheckForSlot()
+    {
+        m_PointerEventData = new PointerEventData(m_EventSystem);
+        m_PointerEventData.position = Input.mousePosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject.GetComponent<ItemSlot>() && result.gameObject != cursorItemSlot.gameObject)
+            { return result.gameObject.GetComponent<ItemSlot>(); }
+        }
+
+        return null;
+    }
 
     private ItemSlot FindCommonSlot(Item itemFiller)
     {
@@ -243,24 +216,6 @@ public class Inventory : MonoBehaviour
             added.AddItem(adder.storedItem, amountHolder);
         }
         else { added.AddItem(adder.storedItem, adder.amount); adder.RemoveItem(adder.amount); }
-
-    }
-
-    private ItemSlot CheckForSlot()
-    {
-        m_PointerEventData = new PointerEventData(m_EventSystem);
-        m_PointerEventData.position = Input.mousePosition;
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        m_Raycaster.Raycast(m_PointerEventData, results);
-
-        foreach (RaycastResult result in results)
-        {
-            if (result.gameObject.GetComponent<ItemSlot>() && result.gameObject != cursorItemSlot.gameObject)
-            { return result.gameObject.GetComponent<ItemSlot>(); }
-        }
-
-        return null;
     }
 
     private void UpdateItemSlots()
@@ -271,5 +226,19 @@ public class Inventory : MonoBehaviour
     }
 
     #endregion
+
+    private void PopulateCreativeInventory()
+    {
+        foreach (ItemSlot tSlot in toolBarSlots) { tSlot.ClearItemSlot(); }
+        foreach (ItemSlot iSlot in inventorySlots) { iSlot.ClearItemSlot(); }
+
+        for (int i = 0; i < ((toolBarSlots.Length - 1) + (worldRef.blockTypes.Length - 1)); i++)
+        {
+            if (i <= toolBarSlots.Length - 1 && i <= worldRef.blockTypes.Length - 1)
+            { toolBarSlots[i].AddItem(worldRef.blockTypes[(byte)i].presetBlockData, 1); }
+            else if (i > toolBarSlots.Length - 1 && i <= worldRef.blockTypes.Length - 1)
+            { inventorySlots[i - toolBarSlots.Length].AddItem(worldRef.blockTypes[(byte)i].presetBlockData, 1); }
+        }
+    }
 
 }

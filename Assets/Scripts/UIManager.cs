@@ -10,16 +10,15 @@ public class UIManager : MonoBehaviour
     public static UIManager uiManager;
     public RectTransform highlight;
 
-    private float timer;
-    private float frameRate;
-    private World worldRef;
-    private CharacterController playerRef;
-
-
     int halfWorldSizeInVoxels;
     int halfWorldSizeInChunks;
 
-    void Awake()
+    private float timer;
+    private float frameRate;
+    private World worldRef;
+    private Player playerRef;
+
+    public void Awake()
     {
         //singleton pattern
         if (uiManager == null)
@@ -28,7 +27,7 @@ public class UIManager : MonoBehaviour
         { Destroy(this.gameObject); }
     }
 
-    void Start()
+    public void Start()
     {
         worldRef = GameManager.currentWorld;
         playerRef = GameManager.player;
@@ -36,7 +35,7 @@ public class UIManager : MonoBehaviour
         halfWorldSizeInVoxels = VoxelData.worldSizeInVoxels / 2;
     }
 
-    void Update()
+    public void Update()
     {
         //if (worldRef == null) { worldRef = GameManager.currentWorld; return; }
         UpdateDebugScreen();
@@ -55,6 +54,7 @@ public class UIManager : MonoBehaviour
                 GameManager.gManager.currentGameState = GameManager.GameState.GAMEPLAY;
                 break;
         }
+
         inventoryUI.SetActive(!inventoryUI.activeSelf);
     }
 

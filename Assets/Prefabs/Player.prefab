@@ -420,7 +420,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8050809071963470220}
-  - component: {fileID: 8050809071963470223}
+  - component: {fileID: 8660332083637058400}
   - component: {fileID: 1640580322602997262}
   m_Layer: 0
   m_Name: Player
@@ -449,7 +449,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8050809071963470223
+--- !u!114 &8660332083637058400
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -458,7 +458,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8050809071963470222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a8f98e004692764fb545f3e150a96c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fd507bd33a6b9a4892b6a9d5b52e1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: 406b70bb31c4ce94e925f308e7be0859, type: 2}
@@ -470,11 +470,14 @@ MonoBehaviour:
   nickName: 
   age: 
   health: 0
-  characterWidth: 0.15
-  characterHeight: 2
+  characterWidth: 0
+  characterHeight: 0
   physics: {fileID: 1640580322602997262}
-  playerCamTarget: {fileID: 8050809072980006561}
   charModel: {fileID: 8050809072115468147}
+  jumpRequest: 0
+  currMoveState: 0
+  worldReference: {fileID: 0}
+  playerCamTarget: {fileID: 8050809072980006561}
   playerCam: {fileID: 8050809073019224967}
   inventory: {fileID: 239357942076531258}
   highlightBlock: {fileID: 4555568163482337202}
@@ -482,6 +485,10 @@ MonoBehaviour:
   checkIncrement: 0.1
   reach: 8
   selectedBlockIndex: 1
+  ignoreMask:
+    serializedVersion: 2
+    m_Bits: 4
+  defaultItemDropPos: {x: 0, y: 0, z: 0}
 --- !u!114 &1640580322602997262
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,6 +9,13 @@ public class Chunk
     public ChunkCoord coord;
 
     public GameObject chunkObject;
+
+    public Vector3 position;
+
+    public byte[,,] voxelMap = new byte[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
+
+    public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
+
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
@@ -19,12 +26,6 @@ public class Chunk
     List<int> triangles = new List<int>();
     List<int> transparentTriangles = new List<int>();
     Material[] materials = new Material[2];
-
-    public Vector3 position;
-
-    public byte[,,] voxelMap = new byte[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
-
-    public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
 
     World world;
 
@@ -63,7 +64,7 @@ public class Chunk
         newThread.Start();
     }
 
-    void PopulateVoxelMap()
+    public void PopulateVoxelMap()
     {
         for (int y = 0; y < VoxelData.chunkHeight; y++)
         {

@@ -29,7 +29,7 @@ public class ItemSlot : MonoBehaviour
         if (amount <= 0) { ClearItemSlot(); }
     }
 
-    public void UseItem(World thisWorld, CharacterController player)
+    public void UseItem(World thisWorld, Player player)
     {
         if (storedItem is BlockData)
         {
@@ -37,8 +37,8 @@ public class ItemSlot : MonoBehaviour
             {
                 thisWorld.PlaceVoxel(player.placeBlock, player.selectedBlockIndex);
 
-                if (player.inventory.currInventoryType == Inventory.InventoryType.SURVIVAL) { RemoveItem(1); }
-                else if (player.inventory.currInventoryType == Inventory.InventoryType.CREATIVE) { /*NOTHING*/ }
+                if (player.currentGameMode == Player.GameMode.SURVIVAL) { RemoveItem(1); }
+                else if (player.currentGameMode == Player.GameMode.CREATIVE) { /*NOTHING*/ }
             }
         }
         else if (!(storedItem is BlockData))
@@ -61,7 +61,7 @@ public class ItemSlot : MonoBehaviour
         amount = amount - amnt;
     }
 
-    public void DropItem(int amnt, Vector3 dropPos)
+    public void DropItem(int amnt,  ref Vector3 dropPos)
     {
         if (itemID == Item.ID.AIR) { return; }
         RemoveItem(amnt);

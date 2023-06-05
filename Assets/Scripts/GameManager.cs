@@ -14,11 +14,12 @@ public class GameManager : MonoBehaviour
     public static GameManager gManager;
     public static UIManager uiManagerRef;
     public static World currentWorld;
-    public static CharacterController player;
+    public static Player player;
+    public static InputManager inputManager;
     public GameState currentGameState;
 
 
-    void Awake()
+    public void Awake()
     {
         //singleton pattern
         if (gManager == null)
@@ -30,26 +31,38 @@ public class GameManager : MonoBehaviour
         currentWorld = GameObject.Find("World").GetComponent<World>();
         //starts on gameplay for testing purposes
         currentGameState = GameState.GAMEPLAY;
-        player = GameObject.Find("Player").GetComponent<CharacterController>();
+        player = GameObject.Find("Player").GetComponent<Player>();
+        inputManager = GameObject.Find("InputManager").GetComponent<InputManager>();
     }
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         //Debug.Log(currentGameState);
         switch (currentGameState)
         {
             case GameState.GAMEPLAY:
                 Cursor.lockState = CursorLockMode.Locked;
+                inputManager.UpdateMoveInput();
+                inputManager.UpdateEditVoxelInput();
+                inputManager.UpdatePickUpInput();
+                inputManager.UpdateToggleDebugScreenInput();
+                inputManager.UpdateToggleCamModeInput();
+                inputManager.UpdateToggleInventoryInput();
+                player.UpdatePlayerCam();
+
                 break;
             case GameState.INVENTORY:
                 Cursor.lockState = CursorLockMode.Confined;
+                inputManager.UpdateToggleInventoryInput();
+                inputManager.UpdateOpenInventoryInput();
+                inputManager.UpdateToggleDebugScreenInput();
                 break;
         }
     }
