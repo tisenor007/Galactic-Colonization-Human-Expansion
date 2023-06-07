@@ -138,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7661edf4b40fcd844aacb21567e74113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currInventoryType: 1
   toolBarSlots:
   - {fileID: 0}
   - {fileID: 0}
@@ -462,7 +461,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: 406b70bb31c4ce94e925f308e7be0859, type: 2}
-  behavior: 0
   walkSpeed: 0
   sprintSpeed: 0
   jumpHeight: 0
@@ -474,14 +472,15 @@ MonoBehaviour:
   characterHeight: 0
   physics: {fileID: 1640580322602997262}
   charModel: {fileID: 8050809072115468147}
-  jumpRequest: 0
   currMoveState: 0
   worldReference: {fileID: 0}
+  jumpRequest: 0
   playerCamTarget: {fileID: 8050809072980006561}
   playerCam: {fileID: 8050809073019224967}
   inventory: {fileID: 239357942076531258}
   highlightBlock: {fileID: 4555568163482337202}
   placeBlock: {fileID: 9159084052129054813}
+  currentGameMode: 0
   checkIncrement: 0.1
   reach: 8
   selectedBlockIndex: 1
@@ -837,7 +836,7 @@ Camera:
   m_GameObject: {fileID: 8050809073019224967}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
