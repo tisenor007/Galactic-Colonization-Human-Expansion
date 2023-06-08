@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public static World currentWorld;
     public static Player player;
     public static InputManager inputManager;
+    public Settings settings;
     public GameState currentGameState;
 
 
@@ -44,11 +45,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape)) { Application.Quit(); }
         //Debug.Log(currentGameState);
         switch (currentGameState)
         {
             case GameState.GAMEPLAY:
                 Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
                 inputManager.UpdateMoveInput();
                 inputManager.UpdateEditVoxelInput();
                 inputManager.UpdatePickUpInput();
@@ -60,10 +63,20 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.INVENTORY:
                 Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
                 inputManager.UpdateToggleInventoryInput();
                 inputManager.UpdateOpenInventoryInput();
                 inputManager.UpdateToggleDebugScreenInput();
                 break;
         }
     }
+}
+
+[System.Serializable]
+public class Settings
+{
+    public int viewDistance;
+    public bool enableThreading;
+
+    public string version;
 }

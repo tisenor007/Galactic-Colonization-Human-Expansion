@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateDebugScreen()
     {
-        string debugText = "Galactic Colonization: Human Expansion BETA v0.1";
+        string debugText = "Galactic Colonization: Human Expansion " + GameManager.gManager.settings.version;
         debugText += "\n";
         debugText += frameRate + "fps";
         debugText += "\n\n";

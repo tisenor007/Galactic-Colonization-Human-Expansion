@@ -41,8 +41,8 @@ public class Inventory : MonoBehaviour
 
     public void AutoCollectItem( Player player)
     {
-        AutoFindSlot(worldRef.blockTypes[worldRef.GetChunkFromVector3(player.highlightBlock.position).GetVoxelFromGlobalVector3(player.highlightBlock.position)].
-        presetBlockData).AddItem(worldRef.blockTypes[worldRef.GetChunkFromVector3(player.highlightBlock.position).GetVoxelFromGlobalVector3(player.highlightBlock.position)].
+        AutoFindSlot(worldRef.blockTypes[worldRef.GetChunkFromVector3(player.highlightBlock.position).GetVoxelFromGlobalVector3(player.highlightBlock.position).id].
+        presetBlockData).AddItem(worldRef.blockTypes[worldRef.GetChunkFromVector3(player.highlightBlock.position).GetVoxelFromGlobalVector3(player.highlightBlock.position).id].
         presetBlockData, 1);
         worldRef.DestroyVoxel(player.highlightBlock);
     }

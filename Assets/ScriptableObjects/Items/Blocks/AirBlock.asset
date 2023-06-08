@@ -19,7 +19,8 @@ MonoBehaviour:
   itemID: 0
   physicalItem: {fileID: 0}
   isSolid: 0
-  isTransparent: 1
+  renderNeighborFaces: 1
+  transparency: 1
   backFaceTexture: 0
   frontFaceTexture: 0
   topFaceTexture: 0

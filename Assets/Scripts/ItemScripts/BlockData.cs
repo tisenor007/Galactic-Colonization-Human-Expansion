@@ -6,7 +6,8 @@ using UnityEngine;
 public class BlockData : Item
 {
     public bool isSolid;
-    public bool isTransparent;
+    public bool renderNeighborFaces;
+    public float transparency;
 
     public int backFaceTexture;
     public int frontFaceTexture;

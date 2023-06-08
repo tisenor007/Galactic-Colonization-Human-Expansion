@@ -402,76 +402,91 @@ MonoBehaviour:
   player: {fileID: 1733575414}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: a648afbfca0230747938c2df6598ff49, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: ba627a1c9f7103b4b87ccf9b59a8ce2b, type: 2}
-  enableThreading: 1
+  transparentMaterial: {fileID: 2100000, guid: 0f7a03bd58efe1941a6a45457df2f6a8, type: 2}
   gravity: -19.8
-  globalLightLevel: 0
+  globalLightLevel: 0.5
   day: {r: 0, g: 0.8239019, b: 1, a: 0}
   night: {r: 0, g: 0.021585314, b: 0.1792453, a: 0}
   blockTypes:
   - presetBlockData: {fileID: 11400000, guid: 4de27b3ab8761b14591fd0347f93f407, type: 2}
     isSolid: 0
-    isTransparent: 1
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: 90fbb1254c385954f87162f090626422, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: -6943373833598557, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: e983be70f6c90cd4298e39e78aa70fef, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 5679390536090785944, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: 9db03c59f564e4b46885a0d0b9ab2d1a, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 5392753449730437660, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: 33dd5fef8afbba34aa6906a0b9ff942f, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 448961105294916356, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: 2797dfc890ae1b346be176b750701119, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: -9138616440249935319, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: da898343aeb06c049b8ad84c1bb420bf, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: -7538633921802359561, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: e845caf7e9636a14aa10acf45128f287, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: 6293614ee7c814e458d9c0e3ef90c7df, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: -4219558403781695398, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: 52caf5c5924a9c6468e8c3a294911b7c, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 6181873364862223445, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: 14b2b857e2ea1464aa0a704378b4911e, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: 85ee2519bb6ee694f934dafe5ba5994f, type: 2}
     isSolid: 1
-    isTransparent: 1
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: c3f4ab8795a0f6144b527a6a353db96b, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: 1db1c3227d3e8e64fb44f7dc85b915c5, type: 2}
     isSolid: 1
-    isTransparent: 0
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: -1501523072523359806, guid: bfaf980136bc4e14890037f32681b2a5, type: 3}
   - presetBlockData: {fileID: 11400000, guid: 6c37e6b8d735bb646b40ebc66edf8d56, type: 2}
     isSolid: 1
-    isTransparent: 1
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: dc924300927786848bc50e1e046b4c23, type: 2}
     isSolid: 1
-    isTransparent: 1
+    renderNeighbourFaces: 0
+    transparency: 0
     icon: {fileID: 0}
 --- !u!4 &570045370
 Transform:
@@ -1219,6 +1234,18 @@ PrefabInstance:
     - target: {fileID: 4593966190069786678, guid: 4c00c194ed9176d439ff9f525134f7c1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593966190069786679, guid: 4c00c194ed9176d439ff9f525134f7c1, type: 3}
+      propertyPath: settings.version
+      value: BETA v0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593966190069786679, guid: 4c00c194ed9176d439ff9f525134f7c1, type: 3}
+      propertyPath: settings.viewDistance
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593966190069786679, guid: 4c00c194ed9176d439ff9f525134f7c1, type: 3}
+      propertyPath: settings.enableThreading
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c00c194ed9176d439ff9f525134f7c1, type: 3}
@@ -2209,6 +2236,10 @@ PrefabInstance:
     - target: {fileID: 8050809072980006561, guid: 32cf719ce7f66bb48a3b11993ebd2f90, type: 3}
       propertyPath: m_Layer
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8050809073019224965, guid: 32cf719ce7f66bb48a3b11993ebd2f90, type: 3}
+      propertyPath: near clip plane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8050809073019224967, guid: 32cf719ce7f66bb48a3b11993ebd2f90, type: 3}
       propertyPath: m_Layer

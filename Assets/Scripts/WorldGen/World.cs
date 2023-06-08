@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
+using System.IO;
 
 //Helped with world Gen: https://www.youtube.com/playlist?list=PLVsTSlfj0qsWEJ-5eMtXsYp03Y9yF1dEn
 
@@ -16,10 +17,9 @@ public class World : MonoBehaviour
     public Material material;
     public Material transparentMaterial;
 
-    private bool enableThreading = false;
     public float gravity = -9.8f;
 
-    [Range(.95f, 0f)]
+    [Range(0f, 1f)]
     public float globalLightLevel;
     public Color day;
     public Color night;
@@ -49,27 +49,39 @@ public class World : MonoBehaviour
 
     private void Start()
     {
+        //string jsonExport = JsonUtility.ToJson(GameManager.gManager.settings);
+        //File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
+
+        string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
+        GameManager.gManager.settings = JsonUtility.FromJson<Settings>(jsonImport);
+
         Random.InitState(seed);
 
-        //shader code
+        Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
+        Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
 
-        if (enableThreading)
+        if (GameManager.gManager.settings.enableThreading)
         {
             chunkUpdateThread = new Thread(new ThreadStart(ThreadedUpdate));
             chunkUpdateThread.Start();
         }
+
+        SetGlobalLightValue();
         foreach (BlockType blockType in blockTypes) { blockType.SetPresetVariables(); }
         spawnPosition = new Vector3((VoxelData.worldSizeInChunks * VoxelData.chunkWidth) / 2f, VoxelData.chunkHeight - 50f, (VoxelData.worldSizeInChunks * VoxelData.chunkWidth) / 2f);
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.position);
     }
 
+    public void SetGlobalLightValue()
+    {
+        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
+        Camera.main.backgroundColor = Color.Lerp(night, day, globalLightLevel);
+    }
+
     private void Update()
     {
         playerChunkCoord = GetChunkCoordFromVector3(player.position);
-
-        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
-        Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel);
 
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
         {CheckViewDistance();}
@@ -84,7 +96,7 @@ public class World : MonoBehaviour
 
         }
 
-        if (!enableThreading)
+        if (!GameManager.gManager.settings.enableThreading)
         {
             if (!applyingModifications)
             { ApplyModifactions(); }
@@ -97,9 +109,9 @@ public class World : MonoBehaviour
 
     void GenerateWorld()
     {
-        for (int x = (VoxelData.worldSizeInChunks / 2) - VoxelData.viewDistanceInChunks; x < (VoxelData.worldSizeInChunks / 2) + VoxelData.viewDistanceInChunks; x++)
+        for (int x = (VoxelData.worldSizeInChunks / 2) - GameManager.gManager.settings.viewDistance; x < (VoxelData.worldSizeInChunks / 2) + GameManager.gManager.settings.viewDistance; x++)
         {
-            for (int z = (VoxelData.worldSizeInChunks / 2) - VoxelData.viewDistanceInChunks; z < (VoxelData.worldSizeInChunks / 2) + VoxelData.viewDistanceInChunks; z++)
+            for (int z = (VoxelData.worldSizeInChunks / 2) - GameManager.gManager.settings.viewDistance; z < (VoxelData.worldSizeInChunks / 2) + GameManager.gManager.settings.viewDistance; z++)
             {
                 ChunkCoord newChunk = new ChunkCoord(x, z);
                 chunks[x, z] = new Chunk(newChunk, this);
@@ -131,7 +143,8 @@ public class World : MonoBehaviour
                 if (chunksToUpdate[index].isEditable)
                 {
                     chunksToUpdate[index].UpdateChunk();
-                    activeChunks.Add(chunksToUpdate[index].coord);
+                    if (!activeChunks.Contains(chunksToUpdate[index].coord))
+                    { activeChunks.Add(chunksToUpdate[index].coord);}
                     chunksToUpdate.RemoveAt(index);
                     updated = true;
                 }
@@ -157,7 +170,7 @@ public class World : MonoBehaviour
 
     private void OnDisable()
     {
-        if (enableThreading)
+        if (GameManager.gManager.settings.enableThreading)
         {
             chunkUpdateThread.Abort();
         }
@@ -219,24 +232,27 @@ public class World : MonoBehaviour
 
         activeChunks.Clear();
 
-        for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
+        for (int x = coord.x - GameManager.gManager.settings.viewDistance; x < coord.x + GameManager.gManager.settings.viewDistance; x++)
         {
-            for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
+            for (int z = coord.z - GameManager.gManager.settings.viewDistance; z < coord.z + GameManager.gManager.settings.viewDistance; z++)
             {
-                if (isChunkInWorld(new ChunkCoord(x, z)))
+
+                ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
+
+                if (isChunkInWorld(thisChunkCoord))
                 {
                     if (chunks[x, z] == null) 
                     { 
-                        chunks[x, z] = new Chunk(new ChunkCoord(x, z), this); 
-                        chunksToCreate.Add(new ChunkCoord(x, z)); 
+                        chunks[x, z] = new Chunk(thisChunkCoord, this); 
+                        chunksToCreate.Add(thisChunkCoord); 
                     }
                     else if (!chunks[x, z].isActive) { chunks[x,z].isActive = true; }
-                    activeChunks.Add(new ChunkCoord(x, z));
+                    activeChunks.Add(thisChunkCoord);
                 }
 
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
+                    if (previouslyActiveChunks[i].Equals(thisChunkCoord))
                     {previouslyActiveChunks.RemoveAt(i);}
                 }
             }
@@ -254,21 +270,21 @@ public class World : MonoBehaviour
 
         if (!isChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.chunkHeight) { return false; }
         if (chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isEditable) 
-        { return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isSolid; }
+        { return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos).id].isSolid; }
 
         return blockTypes[GetVoxel(pos)].isSolid;
 
     }
 
-    public bool CheckIfVoxelTransparent(Vector3 pos)
+    public VoxelState GetVoxelState(Vector3 pos)
     {
         ChunkCoord thisChunk = new ChunkCoord(pos);
 
-        if (!isChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.chunkHeight) { return false; }
+        if (!isChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.chunkHeight) { return null; }
         if (chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isEditable)
-        { return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isTransparent; }
+        { return chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos); }
 
-        return blockTypes[GetVoxel(pos)].isTransparent;
+        return new VoxelState(GetVoxel(pos));
 
     }
 
@@ -391,7 +407,8 @@ public class BlockType
     public BlockData presetBlockData;
 
     [HideInInspector] public bool isSolid;
-    [HideInInspector] public bool isTransparent;
+    [HideInInspector] public bool renderNeighbourFaces;
+    [HideInInspector] public float transparency;
     [HideInInspector] public Sprite icon;
     private string blockName;
 
@@ -408,7 +425,8 @@ public class BlockType
     {
         blockName = presetBlockData.itemName;
         isSolid = presetBlockData.isSolid;
-        isTransparent = presetBlockData.isTransparent;
+        transparency = presetBlockData.transparency;
+        renderNeighbourFaces = presetBlockData.renderNeighborFaces;
         icon = presetBlockData.icon;
 
         backFaceTexture = presetBlockData.backFaceTexture;
