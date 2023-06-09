@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public GameObject debugScreen;
     public GameObject inventoryUI;
-    public static UIManager uiManager;
+    //public static UIManager uiManager;
     public RectTransform highlight;
 
     int halfWorldSizeInVoxels;
@@ -20,11 +20,11 @@ public class UIManager : MonoBehaviour
 
     public void Awake()
     {
-        //singleton pattern
-        if (uiManager == null)
-        { DontDestroyOnLoad(this.gameObject); uiManager = this; }
-        else if (uiManager != this)
-        { Destroy(this.gameObject); }
+        ////singleton pattern
+        //if (uiManager == null)
+        //{ DontDestroyOnLoad(this.gameObject); uiManager = this; }
+        //else if (uiManager != this)
+        //{ Destroy(this.gameObject); }
     }
 
     public void Start()

@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b1541fc7fabeb9429ca0cab3e3f9468, type: 3}
-  m_Name: Default
+  m_Name: Forest
   m_EditorClassIdentifier: 
-  biomeName: Default
-  solidGroundHeight: 42
-  terrainHeight: 42
-  terrainScale: 0.25
-  treeZoneScale: 1.3
-  treeZoneThreshold: 0.6
-  treePlacementScale: 15
-  treePlacementThreshold: 0.8
-  maxTreeHeight: 7
-  minTreeHeight: 5
+  biomeName: Forest
+  offset: 131455
+  scale: 0.14
+  terrainHeight: 50
+  terrainScale: 0.3
+  surfaceBlock: 1
+  subSurfaceBlock: 1
+  majorFloraIndex: 0
+  majorFloraZoneScale: 1.3
+  majorFloraZoneThreshold: 0.6
+  majorFloraPlacementScale: 15
+  majorFloraPlacementThreshold: 0.8
+  placeMajorFlora: 1
+  maxHeight: 12
+  minHeight: 5
   lodes:
   - lodeName: Dirt
     blockID: 1

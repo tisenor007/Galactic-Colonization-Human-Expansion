@@ -12,10 +12,10 @@ public class GameManager : MonoBehaviour
         MAIN_MENU
     }
     public static GameManager gManager;
-    public static UIManager uiManagerRef;
+    public UIManager uiManagerRef;
     public static World currentWorld;
     public static Player player;
-    public static InputManager inputManager;
+    public InputManager inputManager;
     public Settings settings;
     public GameState currentGameState;
 
@@ -28,12 +28,11 @@ public class GameManager : MonoBehaviour
         else if (gManager != this)
         { Destroy(this.gameObject); }
 
-        uiManagerRef = UIManager.uiManager;
+        //uiManagerRef = UIManager.uiManager;
         currentWorld = GameObject.Find("World").GetComponent<World>();
         //starts on gameplay for testing purposes
         currentGameState = GameState.GAMEPLAY;
         player = GameObject.Find("Player").GetComponent<Player>();
-        inputManager = GameObject.Find("InputManager").GetComponent<InputManager>();
     }
 
     // Start is called before the first frame update

@@ -139,7 +139,7 @@ public class Player : CharacterController
     private void UpdatePlayerMovement()
     {
         //Input is getting crowded.... make a input manager in the future?
-        if (!GameManager.inputManager.PlayerIsMoving() && physics.isGrounded) { currMoveState = MoveState.IDLE; }
+        if (!GameManager.gManager.inputManager.PlayerIsMoving() && physics.isGrounded) { currMoveState = MoveState.IDLE; }
     }
 
     private void PlaceCursorBlocks()

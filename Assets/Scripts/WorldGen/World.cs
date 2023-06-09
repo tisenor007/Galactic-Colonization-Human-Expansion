@@ -9,7 +9,7 @@ using System.IO;
 public class World : MonoBehaviour
 {
     public int seed;
-    public BiomeAttributes biome;
+    public BiomeAttributes[] biomes;
 
     public Transform player;
     public Vector3 spawnPosition;
@@ -332,13 +332,52 @@ public class World : MonoBehaviour
             return GetByteFromID(Item.ID.BEDROCK);
         }
 
-        /* BASIC TERRAIN PASS */
-        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + biome.solidGroundHeight;
+        /* BIOME SELECTION PASS */
+        int solidGroundHeight = 42;
+        float sumOfHeights = 0f;
+        int count = 0;
+        float strongestWeight = 0f;
+        int strongestBiomeIndex = 0;
+
+        for (int i = 0; i < biomes.Length; i++)
+        {
+            float weight = Noise.Get2DPerlin(new Vector2(pos.x, pos.z), biomes[i].offset, biomes[i].scale);
+
+            //keep track of which weight is strongest.
+            if (weight > strongestWeight)
+            {
+                strongestWeight = weight;
+                strongestBiomeIndex = i;
+            }
+
+            //Get height of terrain (for the current biome) and multiply it by its weight.
+            float height = biomes[i].terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biomes[i].terrainScale) * weight;
+
+            //if the height value is greater than 0 add it to the sum of heights
+            if (height > 0)
+            {
+                sumOfHeights += height;
+                count++;
+            }
+        }
+
+        //set biome to the one with the strongest weight.
+        BiomeAttributes biome = biomes[strongestBiomeIndex];
+
+        //get the average of the heights
+        sumOfHeights /= count;
+
+        int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
+
+    //BiomeAttributes biome = biomes[index];
+
+    /* BASIC TERRAIN PASS */
+    
         if (yPos == terrainHeight) {
-            voxelValue = GetByteFromID(Item.ID.GRASS);
+            voxelValue = GetByteFromID(biome.surfaceBlock);
         }
         else if (yPos < terrainHeight && yPos > terrainHeight - 4) {
-            voxelValue = GetByteFromID(Item.ID.DIRT);
+            voxelValue = GetByteFromID(biome.subSurfaceBlock);
         }
         else if (yPos > terrainHeight) {
             voxelValue = GetByteFromID(Item.ID.AIR);
@@ -367,16 +406,16 @@ public class World : MonoBehaviour
 
         /* TREE PASS */
 
-        if (yPos == terrainHeight)
+        if (yPos == terrainHeight && biome.placeMajorFlora)
         {
-            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treeZoneScale) > biome.treeZoneThreshold)
+            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.majorFloraZoneScale) > biome.majorFloraZoneThreshold)
             {
-                voxelValue = GetByteFromID(Item.ID.GRASS);
-                if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treePlacementScale) > biome.treePlacementThreshold)
+                //voxelValue = GetByteFromID(Item.ID.GRASS);
+                if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.majorFloraPlacementScale) > biome.majorFloraPlacementThreshold)
                 {
 
-                    voxelValue = GetByteFromID(Item.ID.DIRT);
-                    modifications.Enqueue(Structure.MakeTree(pos, biome.maxTreeHeight, biome.maxTreeHeight));
+                    //voxelValue = GetByteFromID(Item.ID.DIRT);
+                    modifications.Enqueue(Structure.GenerateMajorFlora(biome.majorFloraIndex, pos, biome.maxHeight, biome.maxHeight));
                 }
             }
         }

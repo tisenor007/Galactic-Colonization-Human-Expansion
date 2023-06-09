@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     //input
-    public static InputManager iManager;
+    //public static InputManager iManager;
     private KeyCode forwardInput = KeyCode.W;
     private KeyCode backwardInput = KeyCode.S;
     private KeyCode leftInput = KeyCode.A;
@@ -23,10 +23,10 @@ public class InputManager : MonoBehaviour
 
     public void Awake()
     {
-        if (iManager == null)
-        { DontDestroyOnLoad(this.gameObject); iManager = this; }
-        else if (iManager != this)
-        { Destroy(this.gameObject); }
+        //if (iManager == null)
+        //{ DontDestroyOnLoad(this.gameObject); iManager = this; }
+        //else if (iManager != this)
+        //{ Destroy(this.gameObject); }
     }
     // Start is called before the first frame update
     public void Start()
@@ -95,7 +95,7 @@ public class InputManager : MonoBehaviour
 
     public void UpdateToggleInventoryInput()
     {
-        if (Input.GetKeyDown(viewInventoryInput)) { GameManager.uiManagerRef.ToggleInventory(); }
+        if (Input.GetKeyDown(viewInventoryInput)) { GameManager.gManager.uiManagerRef.ToggleInventory(); }
     }
 
     public void UpdateToggleCamModeInput()
@@ -105,7 +105,7 @@ public class InputManager : MonoBehaviour
 
     public void UpdateToggleDebugScreenInput()
     {
-        if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.uiManagerRef.ToggleDebugScreen(); }
+        if (Input.GetKeyDown(toggleDebugScreenInput)) { GameManager.gManager.uiManagerRef.ToggleDebugScreen(); }
     }
 
     #endregion

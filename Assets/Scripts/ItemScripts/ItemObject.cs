@@ -34,8 +34,8 @@ public class ItemObject : MonoBehaviour
 
     public void Update()
     {
-        GameManager.uiManagerRef.UpdateItemObjectText(itemText, visableTextDistance, itemData, this.gameObject, itemAmount);
-        GameManager.uiManagerRef.RotateUIToFaceCamera(itemText.gameObject.transform, GameManager.player.playerCam);
+        GameManager.gManager.uiManagerRef.UpdateItemObjectText(itemText, visableTextDistance, itemData, this.gameObject, itemAmount);
+        GameManager.gManager.uiManagerRef.RotateUIToFaceCamera(itemText.gameObject.transform, GameManager.player.playerCam);
         if (itemAppearance.sprite != itemData.icon) { itemAppearance.sprite = itemData.icon; }
         RotateItem();
     }
