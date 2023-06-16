@@ -21,9 +21,9 @@ MonoBehaviour:
   isSolid: 1
   renderNeighborFaces: 1
   transparency: 0.75
-  backFaceTexture: 24
-  frontFaceTexture: 24
-  topFaceTexture: 24
-  bottomFaceTexture: 24
-  leftFaceTexture: 24
-  rightFaceTexture: 24
+  backFaceTexture: 16
+  frontFaceTexture: 16
+  topFaceTexture: 16
+  bottomFaceTexture: 16
+  leftFaceTexture: 16
+  rightFaceTexture: 16

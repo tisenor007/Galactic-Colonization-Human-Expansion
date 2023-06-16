@@ -397,6 +397,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a0aea5d49aa453479201c5405b3cbc9, type: 2}
   - {fileID: 11400000, guid: 7632a278ded7ae245893b28ad6ac5503, type: 2}
   - {fileID: 11400000, guid: 1d21474940879ba4b8586d10e4708f92, type: 2}
+  - {fileID: 11400000, guid: 0cacd6e717962064588da8e5d683740e, type: 2}
   player: {fileID: 1733575414}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: a648afbfca0230747938c2df6598ff49, type: 2}
@@ -482,6 +483,26 @@ MonoBehaviour:
     transparency: 0
     icon: {fileID: 0}
   - presetBlockData: {fileID: 11400000, guid: dc924300927786848bc50e1e046b4c23, type: 2}
+    isSolid: 1
+    renderNeighbourFaces: 0
+    transparency: 0
+    icon: {fileID: 0}
+  - presetBlockData: {fileID: 11400000, guid: 02f6b8d00884d8744910e9c6d4392253, type: 2}
+    isSolid: 1
+    renderNeighbourFaces: 0
+    transparency: 0
+    icon: {fileID: 0}
+  - presetBlockData: {fileID: 11400000, guid: 05419b31deb7f434ba763e39342a4486, type: 2}
+    isSolid: 1
+    renderNeighbourFaces: 0
+    transparency: 0
+    icon: {fileID: 0}
+  - presetBlockData: {fileID: 11400000, guid: 26fae985062fc3a4aaf13ff058ce3e68, type: 2}
+    isSolid: 1
+    renderNeighbourFaces: 0
+    transparency: 0
+    icon: {fileID: 0}
+  - presetBlockData: {fileID: 11400000, guid: 0cd1d0e9a09e9a040b4837b1d7c04465, type: 2}
     isSolid: 1
     renderNeighbourFaces: 0
     transparency: 0
@@ -2178,7 +2199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8660332083637058400, guid: 32cf719ce7f66bb48a3b11993ebd2f90, type: 3}
       propertyPath: currentGameMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8701649614065357148, guid: 32cf719ce7f66bb48a3b11993ebd2f90, type: 3}
       propertyPath: m_Layer

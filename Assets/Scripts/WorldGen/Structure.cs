@@ -51,7 +51,7 @@ public static class Structure
         if (height < minTrunkHeight) { height = minTrunkHeight; }
 
         for (int i = 1; i <= height; i++)
-        { queue.Enqueue(new VoxelMod(new Vector3(pos.x, pos.y + i, pos.z), GameManager.currentWorld.GetByteFromID(Item.ID.LEAVES))); }
+        { queue.Enqueue(new VoxelMod(new Vector3(pos.x, pos.y + i, pos.z), GameManager.currentWorld.GetByteFromID(Item.ID.CACTUS))); }
        
 
         return queue;

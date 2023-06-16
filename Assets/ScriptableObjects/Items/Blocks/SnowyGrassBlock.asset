@@ -19,10 +19,11 @@ MonoBehaviour:
   itemID: 13
   physicalItem: {fileID: 4774883338943631089, guid: 61784f3619c21884ebbf81beab187404, type: 3}
   isSolid: 1
-  isTransparent: 0
-  backFaceTexture: 15
-  frontFaceTexture: 15
-  topFaceTexture: 14
-  bottomFaceTexture: 0
-  leftFaceTexture: 15
-  rightFaceTexture: 15
+  renderNeighborFaces: 0
+  transparency: 0
+  backFaceTexture: 23
+  frontFaceTexture: 23
+  topFaceTexture: 22
+  bottomFaceTexture: 6
+  leftFaceTexture: 23
+  rightFaceTexture: 23

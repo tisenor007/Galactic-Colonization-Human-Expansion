@@ -23,7 +23,12 @@ public class Item : ScriptableObject
         PLANKS,
         SNOWYGRASS,
         BRICK,
-        COALORE
+        COALORE,
+        ICE,
+        CACTUS,
+        SANDSTONE,
+        FURNACE,
+        SNOW
     }
 
     public string itemName;
